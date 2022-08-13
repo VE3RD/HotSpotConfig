@@ -8,6 +8,12 @@
 #set -o errexit
 #set -o pipefail
 #set -e
+trap ctrl_c INT
+
+function ctrl_c() {
+  exit
+}
+
 export NCURSES_NO_UTF8_ACS=1
 clear
 echo -e "\e[1;97;44m"
@@ -43,6 +49,11 @@ mode="RO"
 fi
 
 #########  Start of Functions  ################
+function LastHeard(){
+/bin/bash ./lh.sh
+retn_code=$?
+}
+
 function exitcode
 {
 	txt='Abort Function\n\n
@@ -2852,7 +2863,7 @@ function MenuMain(){
 
 #echo "Starting Main Menu Dialog"
 
-HEIGHT=25
+HEIGHT=40
 WIDTH=60
 CHOICE_HEIGHT=35
 BACKTITLE="MMDVM Host Configurator - VE3RD"
@@ -2884,7 +2895,8 @@ CHOICE=$(dialog --clear \
         	14 "Maintenance & Backup/Restore" \
         	15 "Check - Set Modes and Enables" \
         	16 "Set Master All Modes - RO" \
-        	17 "Start Test Funtion" 2>&1 )
+        	17 "Last Heard" \
+        	18 "Start Test Funtion" 2>&1 )
 #>/dev/tty)
 
 #       "${OPTIONS[@]}" )
@@ -2898,6 +2910,9 @@ exitcode=$?
 
 if [ $exitcode -eq 3 ]; then
   mmdvmhost.service restart
+fi
+if [ $exitcode -eq 255 ]; then
+  exit
 fi
 if [ $exitcode -eq 1 ]; then
         dialog --ascii-lines --infobox "Cancel Selected - Exiting Script\nSleeping 2 seconds" 5 40 ; sleep 2
@@ -2929,7 +2944,8 @@ case $CHOICE in
         14) MenuMaint ;;
         15) CheckSetModes ;;
         16) SelectMode ;;
-        17) MasterServ ;;
+        17) LastHeard ;;
+        18) MasterServ ;;
 esac
 
 
