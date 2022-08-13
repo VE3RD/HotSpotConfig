@@ -5,7 +5,7 @@ Yellow='\033[0;33m'
 
 function GetCallInfo () {
 
-  cline=$(grep "$call," /usr/local/etc/stripped.csv | tail -n 1)
+  cline=$(grep ",$call," /usr/local/etc/stripped.csv | tail -n 1)
 
   Name=$(echo "$cline" | cut -d "," -f 3)
   City=$(echo "$cline" | cut -d "," -f 5)
@@ -18,6 +18,11 @@ function GetCallInfo () {
 
 pcall=""
 call=""
+
+clear
+echo "Use Space Bar to Exit"
+echo ""
+
 
 
 while [ true ]
