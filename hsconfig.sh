@@ -50,6 +50,7 @@ fi
 
 #########  Start of Functions  ################
 function LastHeard(){
+clear
 /bin/bash ./lh.sh
 retn_code=$?
 }
