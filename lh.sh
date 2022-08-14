@@ -28,7 +28,7 @@ echo ""
 while [ true ]
 do
 
-LastLine=$(tail -n 1 /var/log/pi-star/MMDVMHost-2022*)
+LastLine=$(tail -n 1 /var/log/pi-star/MMDVM-2022*)
 
 str="voice header"
 
