@@ -224,9 +224,9 @@ function Parse () {
         dstr="MODE = $modes\nTG: $SvrTG \nAddr: $SvrAddr \nPort: $SvrPort"
         ;;
         5)      #P25
-          SvrTG=$(echo "$choice" | cut -f1)
-          SvrAddr=$(echo "$choice" | cut -f2)
-          SvrPort=$(echo "$choice" | cut -f3)
+          SvrTG=$(echo "$choice" | cut -d ";" -f 1)
+          SvrAddr=$(echo "$choice" | cut -d ";" -f 2)
+          SvrPort=$(echo "$choice" | cut -d ";" -f 3)
         dstr="MODE = $modes\nTG: $SvrTG \nAddr: $SvrAddr \nPort: $SvrPort"
 
         ;;

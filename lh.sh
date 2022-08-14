@@ -20,7 +20,7 @@ pcall=""
 call=""
 
 clear
-echo "Use Space Bar to Exit"
+echo "Use 'Q' or 'E' to EXIT or Space Bar to Return to Hot Spot Configure "
 echo ""
 
 
@@ -48,6 +48,7 @@ fi
 #else
 
 #    echo "CM = $cm"
+rmode=$(echo "$LastLine" | cut -d " " -f 4)
 
    if [ "$cm" == 1 ]; then
 	if [ "$call" != "$p1call" ]; then
@@ -56,7 +57,7 @@ fi
 		pl=$(echo "$LastLine" | cut -d " " -f 20)
 		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
-		echo -e "\033[32m$dt $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl\033[0m"
+		echo -e "\033[32m $dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl\033[0m"
 		p1call="$call"
 	fi
    elif [ "$cm" == 0 ]; then
@@ -64,7 +65,7 @@ fi
 		call=$(echo "$LastLine" | cut -d " " -f 12)
 		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
-		echo -e "\033[36m---Active - $dt $call  $Name  $City  $State  $Country \033[0m"
+		echo -e "\033[36m---Active - $dt $rmode $call  $Name  $City  $State  $Country \033[0m"
 		p0call="$call"
 	fi
     else
@@ -75,7 +76,12 @@ fi
 
 sleep 0.1
 if read -n1 -t1 -r -s x; then
+
+	x1=$(echo "$x" | tr '[:lower:]' '[:upper:]')
         clear
+	if [ "$x1" = "Q" ] || [ "$x1" = "E" ]; then
+		exit
+	fi
         /bin/bash hsconfig.sh
     fi
 
