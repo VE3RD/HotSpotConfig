@@ -30,7 +30,11 @@ clear
 echo "Use 'Q' or 'E' to EXIT or Space Bar to Return to Hot Spot Configure "
 echo ""
 if [ -f /etc/LastHeard.txt ]; then
- cat /etc/LastHeard.txt
+
+echo -e "\033[1;97;45m" 
+echo "Reading Log File"
+cat /etc/LastHeard.txt
+echo -e "\033[1;97;44m"
 fi
 
 
@@ -75,8 +79,7 @@ LogStr=
 		call=$(echo "$LastLine" | cut -d " " -f 12)
 		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
-		echo -e "\033[36m---Active - $dt $rmode $call  $Name  $City  $State  $Country \033[0m"
-
+		echo -e "\033[36m\033[1;97;44m ---Active - $dt $rmode $call  $Name  $City  $State  $Country \033[0m"
 		p0call="$call"
 	fi
    elif [ "$cm" == 1 ]; then
@@ -87,8 +90,8 @@ LogStr=
 		pl=$(echo "$LastLine" | cut -d " " -f 20)
 		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
-		echo -e "\033[32m $dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl\033[0m"
-LogStr="$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl"
+		echo -e "\033[32m\033[1;97;44m$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl\033[0m"
+		LogStr="$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl"
 		p1call="$call"
 	fi
  
@@ -99,7 +102,7 @@ LogStr="$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl"
 		call=$(echo "$LastLine" | cut -d " " -f 9)
 		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
-		echo -e "\033[36m---Active - $dt $rmode $call  $Name  $City  $State  $Country \033[0m"
+		echo -e "\033[36m\033[1;97;44m ---Active - $dt $rmode $call  $Name  $City  $State  $Country \033[0m"
 		p2call="$call"
 	fi
    elif [ "$cm" == 3 ]; then
@@ -109,7 +112,7 @@ LogStr="$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl"
 		pl=$(echo "$LastLine" | cut -d " " -f 16)
 		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
-		echo -e "\033[32m $dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl\033[0m"
+		echo -e "\033[32m\033[1;97;44m$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl\033[0m"
 		LogStr="$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl"
 		p3call="$call"
 	fi
