@@ -1,5 +1,7 @@
 #!/bin/bash
 
+var1=$1
+
 Cyan='\033[0;36m'
 Yellow='\033[0;33m'
 export NCURSES_NO_UTF8_ACS=1
@@ -34,6 +36,12 @@ fi
 }
 
 ##### Main program #########
+var=$1
+
+x1=$(echo "$var" | tr '[:lower:]' '[:upper:]')
+if [ "$x1" == "NEW" ]; then
+ sudo rm /etc/LastHeard.txt
+fi
 
 pcall=""
 call=""
