@@ -18,6 +18,20 @@ function GetCallInfo () {
   Country=$(echo "$cline" | cut -d "," -f 7)
 }
 
+function CheckLog(){
+if [ -f /etc/LastHeard.txt ]; then
+
+echo -e "\033[45m" 
+echo "Reading Log File"
+cat /etc/LastHeard.txt
+#dialog --title "Last Heard Log File" --clear --ascii-lines --tailbox /etc/LastHeard.txt 20 0
+errorcode=$?
+echo -e "\033[44m"
+fi
+
+
+
+}
 
 ##### Main program #########
 
@@ -29,13 +43,7 @@ clear
 
 echo "Use 'Q' or 'E' to EXIT or Space Bar to Return to Hot Spot Configure "
 echo ""
-if [ -f /etc/LastHeard.txt ]; then
-
-echo -e "\033[1;97;45m" 
-echo "Reading Log File"
-cat /etc/LastHeard.txt
-echo -e "\033[1;97;44m"
-fi
+CheckLog
 
 
 while [ true ]
@@ -45,11 +53,11 @@ LastLine=$(tail -n 1 /var/log/pi-star/MMDVM-2022* | tail -n 1)
 
 str="voice header"
 ##DMR
-if [[ $LastLine == *"voice header"* ]]; then
+if [[ $LastLine == *"network voice header"* ]]; then
 	cm=0
  	call=$(echo "$LastLine"| cut -d " " -f 12)
 fi
-if [[ $LastLine == *"voice transmission"* ]]; then
+if [[ $LastLine == *"network end of voice"* ]]; then
 	cm=1
  	call=$(echo "$LastLine"| cut -d " " -f 14)
 fi
@@ -59,7 +67,7 @@ if [[ $LastLine == *"network transmission"* ]]; then
         call=$(echo "$LastLine"| cut -d " " -f 14)
 fi
 
-if [[ $LastLine == *"end of transmission"* ]]; then
+if [[ $LastLine == *"network end of transmission"* ]]; then
         cm=4
         call=$(echo "$LastLine"| cut -d " " -f 14)
 fi
@@ -79,8 +87,11 @@ LogStr=
 		call=$(echo "$LastLine" | cut -d " " -f 12)
 		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
-		echo -e "\033[36m\033[1;97;44m ---Active - $dt $rmode $call  $Name  $City  $State  $Country \033[0m"
+		echo -e "\033[33m\033[44m ---Active - $dt $rmode $call  $Name  $City  $State  $Country"
 		p0call="$call"
+		p1call=
+		p2call=
+		p3call=
 	fi
    elif [ "$cm" == 1 ]; then
 
@@ -90,9 +101,13 @@ LogStr=
 		pl=$(echo "$LastLine" | cut -d " " -f 20)
 		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
-		echo -e "\033[32m\033[1;97;44m$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl\033[0m"
+		printf "\033[97m \033[44m"
+		echo  "$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL:$pl"
 		LogStr="$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl"
 		p1call="$call"
+		p0call=
+		p2call=
+		p3call=
 	fi
  
 
@@ -102,8 +117,11 @@ LogStr=
 		call=$(echo "$LastLine" | cut -d " " -f 9)
 		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
-		echo -e "\033[36m\033[1;97;44m ---Active - $dt $rmode $call  $Name  $City  $State  $Country \033[0m"
+		echo -e "\033[33m\033[44m ---Active - $dt $rmode $call  $Name  $City  $State  $Country "
 		p2call="$call"
+		p0call=
+		p1call=
+		p3call=
 	fi
    elif [ "$cm" == 3 ]; then
 	if [ "$call" != "$p3call" ]; then
@@ -112,9 +130,13 @@ LogStr=
 		pl=$(echo "$LastLine" | cut -d " " -f 16)
 		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
-		echo -e "\033[32m\033[1;97;44m$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl\033[0m"
+		echo -e "\033[97m\033[44m$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl"
 		LogStr="$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl"
 		p3call="$call"
+		p0call=
+		p2call=
+		p1call=
+
 	fi
     else
         call="NoCall"
