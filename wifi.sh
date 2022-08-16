@@ -18,18 +18,6 @@ clear
 echo -e "\e[1;97;44m"
 tput setab 4
 clear
-declare -i GWPage=1
-declare -i sectN=1
-declare -i indx=1
-((GWPage=1))
-export GWPage
-
-: ${DIALOG_OK=0}
-: ${DIALOG_CANCEL=1}
-: ${DIALOG_HELP=2}
-: ${DIALOG_EXTRA=3}
-: ${DIALOG_ITEM_HELP=4}
-: ${DIALOG_ESC=255}
 
 ##Set default colors
 sudo sed -i '/use_colors = /c\use_colors = ON' ~/.dialogrc
@@ -38,8 +26,6 @@ sudo sed -i '/title_color = /c\title_color = (YELLOW,RED,ON)' ~/.dialogrc
 sudo sed -i '/tag_color = /c\tag_color = (YELLOW,BLUE,OFF)' ~/.dialogrc
 sudo sed -i '/tag_key_color = /c\tag_key_color = (YELLOW,BLUE,OFF)' ~/.dialogrc
 sudo sed -i '/tag_key_selected_color = /c\tag_key_selected_color = (YELLOW,BLUE,ON)' ~/.dialogrc
-
-
 
 Mode="RO"
 CallSign=""
@@ -59,12 +45,10 @@ function ScanWiFi(){
 
 options=$( iwlist wlan0 scan |grep -wv \x00 | grep ESSID | cut -d ":" -f2 |  awk '{print $1, FNR, "N/A"}')
 ssid=$(dialog \
-        --column-separator \
-        --keep-tite \
+	--title "WiFi ESSID Selector" \
         --stdout \
-        --colors \
         --ascii-lines \
-      --radiolist "Select $modes Server:" 22 90 16 \
+      --radiolist "Select ESSID from the following List: MODE=$mode" 22 90 16 \
         "${cmd[@]}" ${options})
 exitcode=$?
 
@@ -74,14 +58,18 @@ pwd=$(dialog \
 	--stdout \
 	--inputbox "Enter your Password for $ssid" 20 30 )
 
+	wificmd="sudo nmcli dev wifi connect ""$ssid"" password ""$pwd"
+	
 	dialog \
         	--ascii-lines \
         	--stdout \
-		--title "Selected ESID $ssid" \
-        	--infobox "\nResults Ready to Set\n\nESSID = $ssid\nPassw = $pwd" 20 40  
+		--title "Selected ESID $ssid   MODE = $Mode" \
+        	--infobox "\nResults Ready to Set\n\nESSID = $ssid\nPassw = $pwd\n\n Command= $wificmd" 20 80  
 
+	if [ "$Mode" == "RW" ];then
 
-
+		sudo nmcli dev wifi connect "$ssid" password "$pwd"
+	fi
 fi
 
 
