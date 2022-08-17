@@ -69,6 +69,30 @@ exit
 
 }
 
+function SearchRID(){
+inpcall=$(dialog \
+	--ascii-lines \
+	--title "Data Search on Stripped.csv (Radioid.net)" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
+	--stdout \
+	--inputbox "Enter Search Text" 10 60)
+exitcode=$?
+if [ $exitcode -eq 1 ]; then
+     MenuMain
+fi
+      dialog \
+	--ascii-lines \
+	--backtitle "Hotspot Configurator - by VE3RD" \
+	--title "History Last Heard Filtered" \
+	--prgbox "Filtered File" "grep $inpcall /usr/local/etc/stripped.csv" 20 100
+MenuMain
+
+
+
+
+
+}
+
 function SearchLH(){
 
 inp=$(dialog \
@@ -2949,7 +2973,8 @@ CHOICE=$(dialog --clear \
         	15 "Check - Set Modes and Enables" \
         	16 "Set Master All Modes - RO" \
         	17 "Last Heard" \
-        	18 "Search Last Heard" 2>&1 )
+        	18 "Search Last Heard" \
+        	19 "Call Sign Lookup (RadioID)" 2>&1 )
 
 exitcode=$?
 
@@ -2989,6 +3014,7 @@ case $CHOICE in
         16) SelectMode ;;
         17) LastHeard ;;
         18) SearchLH ;;
+        19) SearchRID ;;
 esac
 
 
