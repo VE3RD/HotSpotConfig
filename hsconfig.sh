@@ -61,7 +61,9 @@ function exitcode
 {
 	txt='Abort Function\n\n
 	This Script will Now Stop'"\n$exittext"
-	dialog --title "  Programmed Exit  " --ascii-lines --msgbox "$txt" 8 78
+	dialog --title "  Programmed Exit  " \
+	--backtitle "Hotspot Configurator - by VE3RD" \
+	--ascii-lines --msgbox "$txt" 8 78
 	tput setab 9 mode="" clear echo -e '\e[1;40m' run="Done" 
 exit
 
@@ -72,11 +74,16 @@ function SearchLH(){
 inp=$(dialog \
 	--ascii-lines \
 	--title "Last Heard History Search" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
 	--stdout \
 	--inputbox "search Text" 10 40)
-
+exitcode=$?
+if [ $exitcode -eq 1 ]; then
+     MenuMain
+fi
       dialog \
 	--ascii-lines \
+	--backtitle "Hotspot Configurator - by VE3RD" \
 	--title "History Last Heard Filtered" \
 	--prgbox "Filtered File" "grep $inp /etc/lastheard.txt" 20 90
 MenuMain
@@ -90,6 +97,7 @@ smode=$(dialog \
         --ascii-lines \
         --keep-tite \
         --clear \
+	--backtitle "Hotspot Configurator - by VE3RD" \
         --stdout \
         --title "Mode Selector" \
         --radiolist "Select Mode $indx"  20 30 20 \
@@ -102,7 +110,7 @@ smode=$(dialog \
 exitcode=$?
 
 if [ $exitcode -eq 1 ]; then
-        exit
+        MenuMain
 fi
 F1=""
 F2=""
@@ -140,6 +148,7 @@ SearchBox
 function SearchBox(){
 sbox=$(dialog \
         --ascii-lines \
+	--backtitle "Hotspot Configurator - by VE3RD" \
         --clear \
         --stdout \
         --title "Mode Selector" \
@@ -148,7 +157,7 @@ sbox=$(dialog \
 exitcode=$?
 
 if [ $exitcode -eq 1 ]; then
-        exit
+        MenuMain
 fi
 
 if [ -z "$sbox" ]; then
@@ -175,7 +184,8 @@ function choose () {
 
 cmd=$(dialog --title "Master Server Selector" \
         --column-separator \
-        --keep-tite \
+     	--backtitle "Hotspot Configurator - by VE3RD" \
+	--keep-tite \
         --stdout \
         --colors \
         --ascii-lines \
@@ -253,6 +263,13 @@ function Parse () {
  dialog --ascii-lines --clear --title "Selected $modes Server Detail" --msgbox "$dstr" 10 70
 
 
+#if [ "$Net1" != "$dm1" ]; then 
+#        sudo sed -i '/^\[/h;G;/'"$modes"']/s/\(Addrtess=\).*/\1'"$SvrAddr"'/m;P;d' /etc/mmdvmhost
+#        sudo sed -i '/^\[/h;G;/'"$modes"']/s/\(Addrtess=\).*/\1'"$SvrAddr"'/m;P;d' /etc/mmdvmhost
+#fi
+
+
+
 clear
 MenuMain
 }
@@ -264,7 +281,7 @@ function MasterServ(){
 exec 3>&1
 
 SrcTxt=$(dialog  --ascii-lines \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
         --title "  Search for a Master Server Step 1 " \
         --inputbox "Enter your Search Text" 8 40 \
 	2>&1 1>&3 )
@@ -285,8 +302,8 @@ done
 echo "$RADIOLIST"
 
 SvrStr=$(dialog \
+	--backtitle "Hotspot Configurator - by VE3RD" \
 	--ascii-lines \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
         --title "  DMR Master Sever List " \
 	--menu "Select the DMR Master Server" 20 70 10 0 \
 	$RADIOLIST \
@@ -321,7 +338,7 @@ exit
 
 #dialog --ascii-lines --infobox "Server Name = $SvrName\nServer Address = $SvrAddr\nPassword = $SvrPassw\Port = $SvrPort\" 10 60 ; sleep 1
 dialog --ascii-lines \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
         --title " Details of Selected DMR Master Server " \
 	--msgbox "Server Name = $SvrName\nServer Address = $SvrAddr\nPassword = $SvrPassw\nPort = $SvrPort" 10 60 
  errorcode=$?
@@ -352,7 +369,7 @@ if [ -z $NXDNG ]; then NXDNG="Stopped" ; fi
 
 
 dialog  --ascii-lines \
-	--backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
         --title "  Running Services  " \
     	--mixedform " Check List - Display ONLY:" 20 40 12 \
         "MMDVMHost" 	1 1 	"$MMDVM" 	1 15 20 0 2 \
@@ -397,7 +414,7 @@ echo "DMR Net4 Enabled = $dm4"
  opmodes=$(dialog \
         --title "Modes and Enables Screen" \
         --ok-label "Submit" \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
 	--stdout \
         --ascii-lines \
         --mixedform "Modes Enable and DMRGateay Enables (Editable)" 25 60 20 \
@@ -488,7 +505,8 @@ function LogMon(){
 F1=$(dialog \
         --ascii-lines \
         --title "Log File List" \
-        --begin 1 10 \
+ 	--backtitle "Hotspot Configurator - by VE3RD" \
+       --begin 1 10 \
 	--stdout \
         --title "Please choose a file" \
         --fselect "/var/log/pi-star/" 30 90 )
@@ -516,7 +534,7 @@ fi
 
 F2=$(dialog \
         --ascii-lines \
-        --title "Select a file" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
         --stdout \
         --title "Please choose a file" \
         --tailbox "$F1" 40 0 )
@@ -592,7 +610,7 @@ echo "NetModeHang - $mm2"
 
 tim=$(dialog  --ascii-lines \
 	--stdout \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
         --title " RF / Net / ModeHang Timers  " \
         --mixedform " Timers and ModeHangs " 0 40 0 \
         "D-Star"   		1 1 "D-Star" 1 25 35 0 2 \
@@ -788,7 +806,7 @@ exec 3>&1
 	--extra-button \
 	--colors \
 	--extra-label "Next Page" \
-	--backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
 	--ascii-lines \
 	--mixedform "DMRGateway $sect Configuration Items (Editable)" 30 60 15 \
 	"Jump To Net" 	1 1 	"0" 		1 15 35 0 0 \
@@ -958,7 +976,7 @@ exec 3>&1
 	--extra-button \
 	--colors \
 	--extra-label "Next Page" \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
         --ascii-lines \
         --mixedform "DMRGateway Configuration Items (Editable)" 0 60 40 \
         "DMR Neta A"  	1 1 "$DMRNeta"  1 15 35 0 2 \
@@ -1275,7 +1293,7 @@ exec 3>&1
         --ok-label "Submit" \
 	--extra-button \
 	--extra-label "$elabel" \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
         --ascii-lines \
         --mixedform "DMRGateway Configuration Items\nItems marked -gw4 are only available in DMRGateway-4 by VE3RD" 30 70 30 \
         "General"    		1 1 "General"  	1 22 35 0 2 \
@@ -1422,7 +1440,7 @@ exec 3>&1
   Logd=$(dialog  \
         --title "MMDVM Log Section" \
 	--ok-label "Submit" \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
         --ascii-lines \
         --mixedform "MMDVM Log  Configuration Items (Editable)" \
         20 50 0 \
@@ -1492,7 +1510,7 @@ returncode=$?
 exec 3>&1
 
 Gen=$(dialog  --ascii-lines \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
 	--separate-widget  $'\n'   \
 	--ok-label "Save" \
 	--title "General Section" \
@@ -1586,7 +1604,7 @@ mm15=$(sed -nr "/^\[Modem\]/ { :l /^UARTSpeed[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b 
 exec 3>&1
 
 Modems=$(dialog  --ascii-lines \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
         --separate-widget  $'\n'   \
         --ok-label "Save" \
         --title "Modem Section" \
@@ -1707,7 +1725,7 @@ d10=$(sed -nr "/^\[DMR Network\]/ { :l /LocalPort[ ]*=/ { s/.*=[ ]*//; p; q;}; n
 exec 3>&1
 
 DMRs=$(dialog  --ascii-lines \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
 	--extra-button \
 	--extra-label "Options" \
         --separate-widget  $'\n'   \
@@ -1833,7 +1851,7 @@ exec 3>&1
 
 
 P25d=$(dialog  --ascii-lines \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
         --separate-widget  $'\n'   \
         --ok-label "Save" \
         --title "P25 Section" \
@@ -1998,7 +2016,7 @@ exec 3>&1
 
 
 nxdnd=$(dialog  --ascii-lines \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
         --separate-widget  $'\n'   \
         --ok-label "Save" \
         --title "nxdn Section" \
@@ -2178,7 +2196,7 @@ y25=$(sed -nr "/^\[YSF Network\]/ { :l /Hosts[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b 
 exec 3>&1
 
 ysfd=$(dialog  --ascii-lines \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
         --separate-widget  $'\n' \
         --ok-label "Save" \
         --title "YSF Section" \
@@ -2375,16 +2393,14 @@ fi
 HEIGHT=25
 WIDTH=40
 CHOICE_HEIGHT=15
-BACKTITLE="MMDVM Host Configurator - VE3RD"
+BACKtitle "Hotspot Configurator - by VE3RD"
 TITLE="Maintnance Menu"
 MENU="Choose one of the following options:"
 
 
 MAINT=$(dialog --clear \
                 --ascii-lines \
-                --extra-button \
-                --extra-label "MainMenu" \
-                --cancel-label "EXIT" \
+                --cancel-label "RETURN" \
                 --backtitle "$BACKTITLE" \
                 --title "$TITLE" \
                 --menu "$MENU" \
@@ -2397,22 +2413,19 @@ MAINT=$(dialog --clear \
 		6 "Reboot Hotspot" \
 		7 "Update Host Files" \
 		8 "Log File Monitor" \
-		9 "Services" 2>&1 >/dev/tty)
+		9 "Clean Log File Directory" \
+		10 "Services" 2>&1 >/dev/tty)
 exitcode=$?
 
-if [ "$exitcode" -eq 3 ]; then
-   MenuMain
-fi
 
 if [ "$exitcode" -eq 255 ]; then
    MenuMain
 fi
 
 if [ "$exitcode" -eq 1 ]; then
-        dialog --ascii-lines --infobox "Cancel Selected - Exiting Script" 5 40 ; sleep 1
+        dialog --ascii-lines ==clear --infobox "Return Selected - Returning to Main Menu" 5 60 ; sleep 1
 	clear
-
-        exit
+         MenuMain
 fi
 
 
@@ -2444,7 +2457,7 @@ if [ "$MAINT" -eq 2 ]; then
 
      F1=$(dialog \
         --ascii-lines \
-        --backtitle "MMDVM Host Configurator - VE3RD    -Tab Moves Cursor Between Areas -Tab Selects File" \
+        --backtitle "Hotspot Configurator - by VE3RD    -Tab Moves Cursor Between Areas -Tab Selects File" \
         --stdout \
         --title "Please choose a file" \
         --fselect /etc/backups/ 14 75 )
@@ -2477,24 +2490,33 @@ if [ "$MAINT" -eq 2 ]; then
         fi
 fi
 
-if [ "$MAINT" -eq 3 ]; then
-sudo mmdvmhost.services restart
+MMDVM=$(pgrep MMDVMHost)
+DMRG=$(pgrep DMRGateway)
+P25G=$(pgrep P25Gateway)
+YSFG=$(pgrep YSFGateway)
+NXDNG=$(pgrep NXDNGateway)
+
+if [ "$MAINT" -eq 3 ] && [ "$MMDVM" ] ; then
+	sudo mmdvmhost.service restart
+	MenuMaint
 fi
 
-if [ "$MAINT" -eq 4 ]; then
-sudo dmrgateway.services restart
+if [ "$MAINT" -eq 4 ] &&  [ "$DMRG" ] ; then
+	sudo dmrgateway.service restart
+	MenuMaint
 fi
 
 if [ "$MAINT" -eq 5 ]; then
-	sudo mmdvmhost.service restart
-	sudo dmrgateway.service restar
-	sudo p25gateway.service restart
-	sudo ysfgateway.service restart
-	sudo nxdngateway.service restart
+	if [ "$MMDVM" ]; then sudo mmdvmhost.service restart ; fi
+	if [ "$DMRG" ]; then sudo dmrgateway.service restart ; fi
+	if [ "$P25G" ]; then sudo p25gateway.service restart ; fi
+	if [ "$YSFG" ]; then sudo ysfgateway.service restart ; fi
+	if [ "$NXDNG" ]; then sudo nxdngateway.service restart ; fi
+ 	MenuMaint
 fi
 
 if [ "$MAINT" -eq 6 ]; then
-	echo "Rebooting Hotspot - Log back in when it come up"
+	echo "Rebooting Hotspot - Log back in when it comes up"
 	sudo reboot
 	exit
 fi
@@ -2503,6 +2525,7 @@ if [ "$MAINT" -eq 7 ]; then
 	echo "Updating All Host Files"
 	echo "Please WAIT a few seconds"
 	sudo HostFilesUpdate.sh
+	MenuMaint
 fi
 
 if [ "$MAINT" -eq 8 ]; then
@@ -2510,6 +2533,12 @@ if [ "$MAINT" -eq 8 ]; then
 fi
 
 if [ "$MAINT" -eq 9 ]; then
+sudo find /var/log/pi-star/ -mindepth 1 -mmin +1442 -exec rm -rf {} \;	
+	MenuMaint
+fi
+
+
+if [ "$MAINT" -eq 10 ]; then
 	Services
 fi
 
@@ -2550,7 +2579,7 @@ nd17=$(sed -nr "/^\[NextionDriver\]/ { :l /SleepWhenInactive[ ]*=/ { s/.*=[ ]*//
 exec 3>&1
 
 Next=$(dialog  --ascii-lines \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
         --separate-widget  $'\n'   \
         --ok-label "Save" \
         --title "Nextion Sections" \
@@ -2751,7 +2780,7 @@ exec 3>&1
   scrn=$(dialog  \
         --title "Display Screen Sections - Non - Nextion " \
         --ok-label "Submit" \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
         --ascii-lines \
         --mixedform "Display Screens - Currently Read Only" 0 70 0 \
         "TFT Serial"    	1 1 "TFT Serial"  	1 22 35 0 2 \
@@ -2792,7 +2821,7 @@ fi
 
 
 dialog \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
 	--title " Edit Non Nextion Screens "  \
 	--ascii-lines --msgbox " This function Under Construction" 13 50
 
@@ -2813,7 +2842,7 @@ URLs=$(sed -nr "/^\[Info\]/ { :l /URL[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" /et
 exec 3>&1
 
 Infod=$(dialog  --ascii-lines \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
         --separate-widget  $'\n'   \
         --ok-label "Save" \
         --title "Info Section" \
@@ -2890,9 +2919,9 @@ sudo mount -o remount,rw / > /dev/null
 HEIGHT=40
 WIDTH=60
 CHOICE_HEIGHT=35
-BACKTITLE="MMDVM Host Configurator - VE3RD"
+BACKtitle "Hotspot Configurator - by VE3RD"
 TITLE="Main Menu Mode=$mode"
-MENU="Choose one of the following options\n RO Read Only"
+MENU="Choose one of the following options\n RO Means nothing written to File"
 
 
 CHOICE=$(dialog --clear \
@@ -2921,33 +2950,23 @@ CHOICE=$(dialog --clear \
         	16 "Set Master All Modes - RO" \
         	17 "Last Heard" \
         	18 "Search Last Heard" 2>&1 )
-#>/dev/tty)
-
-#       "${OPTIONS[@]}" )
-#3 2>&1 1>&3 )
-#2>&1 >/dev/tty)
 
 exitcode=$?
-#echo "ExitCode = $exitcode"
-#echo "Choice = $CHOICE"
 
-
-if [ $exitcode -eq 3 ]; then
-  mmdvmhost.service restart
-fi
 if [ $exitcode -eq 255 ]; then
   exit
 fi
+
 if [ $exitcode -eq 1 ]; then
-        dialog --ascii-lines --infobox "Cancel Selected - Exiting Script" 5 40 ; sleep 1
+        dialog --ascii-lines --clear --infobox "Exit Selected - Exiting Script" 5 40 ; sleep 1
          exit
    
 fi
 
 
 if [ -z "$CHOICE" ]; then
-        dialog --ascii-lines --infobox "Choice Box Empty - Exiting Script" 5 40 ; sleep 1
- exit
+        dialog --ascii-lines --clear --infobox "Choice Box Empty - Exiting Script" 5 40 ; sleep 1
+ 	exit
 fi
 
 
@@ -2982,7 +3001,7 @@ declare -a SearchTxt=( $(dialog --title " P25 Server Search Utility" \
         --ascii-lines \
         --clear \
         --colors \
-        --backtitle "MMDVM Host Configurator - VE3RD" \
+	--backtitle "Hotspot Configurator - by VE3RD" \
         --inputbox "Enter your Search Criteria" 8 70  "tgif" 2>&1 >/dev/tty) )
 # get response
 response=$?
