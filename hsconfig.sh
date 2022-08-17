@@ -488,20 +488,24 @@ function LogMon(){
 F1=$(dialog \
         --ascii-lines \
         --title "Log File List" \
-        --stdout \
+        --begin 1 10 \
+	--stdout \
         --title "Please choose a file" \
-        --fselect "/var/log/pi-star/" 30 0 )
+        --fselect "/var/log/pi-star/" 30 90 )
 
-# delete file
+returncode=$?
+echo "$returncode"
+
 
 if [ $returncode -eq 1 ]; then
         dialog --ascii-lines --infobox "Cancel Selected" 5 30 ; sleep 1
-   MenuMain
+   MenuMaint
 fi
 if [ $returncode -eq 255 ]; then
-        dialog --ascii-lines --infobox "Cancel Selected" 5 30 ; sleep 1
-   MenuMain
+        dialog --ascii-lines --infobox "ESC Button Pressed" 5 30 ; sleep 1
+   MenuMaint
 fi
+
 
 if [ ! -z "$F1" ]; then
 	echo "File = $F1"
