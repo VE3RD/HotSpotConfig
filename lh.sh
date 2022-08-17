@@ -1,5 +1,5 @@
 #!/bin/bash
-
+sudo mount -o remount,rw / > /dev/null
 var1=$1
 
 Cyan='\033[0;36m'
@@ -39,7 +39,8 @@ var=$1
 
 x1=$(echo "$var" | tr '[:lower:]' '[:upper:]')
 if [ "$x1" == "NEW" ]; then
- sudo rm /etc/lastheard.txt
+ sudo mount -o remount,rw / > /dev/null
+sudo rm /etc/lastheard.txt
 fi
 
 pcall=""
@@ -156,6 +157,7 @@ LogStr=
    fi
 
 if [ ! -z "$LogStr" ]; then
+sudo mount -o remount,rw / > /dev/null
   echo "$LogStr" >> /etc/lastheard.txt
 fi
 
