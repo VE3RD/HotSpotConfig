@@ -10,6 +10,8 @@
 #set -e
 trap ctrl_c INT
 
+sudo mount -o remount,rw / > /dev/null
+
 function ctrl_c() {
   exit
 }
@@ -64,6 +66,23 @@ function exitcode
 exit
 
 }
+
+function SearchLH(){
+
+inp=$(dialog \
+	--ascii-lines \
+	--title "Last Heard History Search" \
+	--stdout \
+	--inputbox "search Text" 10 40)
+
+      dialog \
+	--ascii-lines \
+	--title "History Last Heard Filtered" \
+	--prgbox "Filtered File" "grep $inp /etc/lastheard.txt" 20 90
+MenuMain
+
+}
+
 ########
 function SelectMode(){
 
@@ -300,7 +319,7 @@ echo "$SvrPassw"
 echo "$SvrPort"
 exit
 
-#dialog --ascii-lines --infobox "Server Name = $SvrName\nServer Address = $SvrAddr\nPassword = $SvrPassw\Port = $SvrPort\" 10 60 ; sleep 2
+#dialog --ascii-lines --infobox "Server Name = $SvrName\nServer Address = $SvrAddr\nPassword = $SvrPassw\Port = $SvrPort\" 10 60 ; sleep 1
 dialog --ascii-lines \
         --backtitle "MMDVM Host Configurator - VE3RD" \
         --title " Details of Selected DMR Master Server " \
@@ -468,27 +487,31 @@ CheckSetModes
 function LogMon(){
 F1=$(dialog \
         --ascii-lines \
-        --title "Select a file" \
-        --stdout \
+        --title "Log File List" \
+        --begin 1 10 \
+	--stdout \
         --title "Please choose a file" \
-        --fselect "/var/log/pi-star/" 30 0 )
+        --fselect "/var/log/pi-star/" 30 90 )
 
-# delete file
+returncode=$?
+echo "$returncode"
+
 
 if [ $returncode -eq 1 ]; then
-        dialog --ascii-lines --infobox "Cancel Selected\nSleeping 2 seconds" 10 30 ; sleep 2
-   MenuMain
+        dialog --ascii-lines --infobox "Cancel Selected" 5 30 ; sleep 1
+   MenuMaint
 fi
 if [ $returncode -eq 255 ]; then
-        dialog --ascii-lines --infobox "Cancel Selected\nSleeping 2 seconds" 10 30 ; sleep 2
-   MenuMain
+        dialog --ascii-lines --infobox "ESC Button Pressed" 5 30 ; sleep 1
+   MenuMaint
 fi
+
 
 if [ ! -z "$F1" ]; then
 	echo "File = $F1"
 else
-        dialog --ascii-lines --infobox "You Forgot to Select a File with the Space Bar\nGo Back and Try Again" 10 30 ; sleep 2
-	LogMon
+        dialog --ascii-lines --infobox "You Forgot to Select a File with the Space Bar\nGo Back and Try Again" 6 30 ; sleep 1
+	MenuMaint
 fi
 
 F2=$(dialog \
@@ -530,7 +553,7 @@ esac
 }
 #############
 function EditModeGroup(){
-   dialog --ascii-lines --infobox "Not Yet Implemented - Sleeping 2 seconds" 10 40 ; sleep 2
+   dialog --ascii-lines --infobox "Not Yet Implemented" 5 40 ; sleep 1
 	MenuMain
 }
 ############
@@ -733,7 +756,7 @@ sudo sed -i '/^\[/h;G;/General]/s/\(^NetModeHang=\).*/\1'"$mmNMH"'/m;P;d' /etc/m
 fi
 
 
-dialog --ascii-lines --infobox "Data Write Complete - Sleeping 2 seconds" 10 40 ; sleep 2
+dialog --ascii-lines --infobox "Data Write Complete" 5 40 ; sleep 1
 
 EditTimers
 }
@@ -978,7 +1001,7 @@ exec 3>&1
 errorcode=$?
 
 if [ $errorcode -eq 1 ]; then
-   dialog --ascii-lines --infobox "Cancel selected - Sleeping 2 seconds" 10 40 ; sleep 2
+   dialog --ascii-lines --infobox "Cancel Selected" 5 40 ; sleep 1
         EditDMRGate
 fi
 
@@ -1413,11 +1436,11 @@ exec 3>&1
 
 errorcode=$?
 if [ $errorcode -eq 1 ]; then
-   dialog --ascii-lines --infobox "Cancel selected - Sleeping 2 seconds" 10 40 ; sleep 2
+   dialog --ascii-lines --infobox "Cancel Selected" 5 40 ; sleep 1
 	MenuMain
 fi
 if [ $errorcode -eq 255 ]; then
-   dialog --ascii-lines --infobox "ESC Button Pressed - Sleeping 2 seconds" 10 40 ; sleep 2
+   dialog --ascii-lines --infobox "ESC Button Pressed" 5 40 ; sleep 1
 	MenuMain
 fi
 if [ $mode == "RO" ]; then
@@ -1432,7 +1455,7 @@ FileRoot=$(echo "$Logd"  | sed -n '4p' )
 FileRotate=$(echo "$Logd"  | sed -n '5p' )
 
 if [ -z $FilePath ]; then
-   dialog --ascii-lines --infobox "Bad Data - Aborting - Sleeping 2 seconds" 10 40 ; sleep 2
+   dialog --ascii-lines --infobox "Bad Data - Aborting" 5 40 ; sleep 1
   MenuMain
 fi
 
@@ -1489,12 +1512,12 @@ returncode=$?
 Callsign=$(echo "$Gen" | sed -n '1p')
 
 if [  $returncode -eq 1 ]; then 
-	dialog --ascii-lines --infobox "Cancel Selected - Function Aborted\nSleeping 2 seconds" 10 40 ; sleep 2
+	dialog --ascii-lines --infobox "Cancel Selected - Function Aborted" 5 40 ; sleep 1
  	MenuMain
 fi
 
 if [ -z "$Callsign" ]; then 
-        dialog --ascii-lines --infobox " No Data Detected - Function Aborted\nSleeping 2 seconds" 10 40 ; sleep 2
+        dialog --ascii-lines --infobox " No Data Detected - Function Aborted" 5 40 ; sleep 1
         MenuMain
 fi
 
@@ -1591,7 +1614,7 @@ Port=$(echo "$Modems" | sed -n '1p')
 
 
 if [  $returncode -eq 1 ]; then 
-	dialog --ascii-lines --infobox "Cancel Selected - Function Aborted\nSleeping 2 seconds" 10 40 ; sleep 2
+	dialog --ascii-lines --infobox "Cancel Selected - Function Aborted" 5 40 ; sleep 1
  	MenuMain
 fi
 if [  $returncode -eq 255 ]; then 
@@ -1708,7 +1731,7 @@ DMRs=$(dialog  --ascii-lines \
 returncode=$?
 
 if [ $returncode -eq 1 ]; then 
-	dialog --ascii-lines --infobox "Cancel Selected1 - Function Aborted\nSleeping 2 seconds" 10 40 ; sleep 2
+	dialog --ascii-lines --infobox "Cancel Selected1 - Function Aborted" 5 40 ; sleep 1
 	MenuMain
 fi
 
@@ -2386,7 +2409,7 @@ if [ "$exitcode" -eq 255 ]; then
 fi
 
 if [ "$exitcode" -eq 1 ]; then
-        dialog --ascii-lines --infobox "Cancel Selected - Exiting Script\nSleeping 2 seconds" 5 40 ; sleep 2
+        dialog --ascii-lines --infobox "Cancel Selected - Exiting Script" 5 40 ; sleep 1
 	clear
 
         exit
@@ -2408,9 +2431,9 @@ if [ "$MAINT" -eq 1 ]; then
 	errt=[[ $err1+$err2+$err3+$err4+$err5]]
 
 	if [ $errt -gt 0 ]; then
-        	dialog --ascii-lines --infobox "Backups FAILED!!  - Reloading Menu" 5 40 ; sleep 2        	
+        	dialog --ascii-lines --infobox "Backups FAILED!!  - Reloading Menu" 5 40 ; sleep 1        	
 	else
-		dialog --ascii-lines --infobox "Backups Complete - Reloading Menu" 5 40 ; sleep 2
+		dialog --ascii-lines --infobox "Backups Complete - Reloading Menu" 5 40 ; sleep 1
 	fi
 		
 	MenuMaint
@@ -2428,11 +2451,11 @@ if [ "$MAINT" -eq 2 ]; then
 
 	exitcode=$?
 	if [ $exitcode -eq 1 ]; then
-		dialog --ascii-lines --infobox "Cancel Selected\nFunction Aborted" 5 40 ; sleep 2
+		dialog --ascii-lines --infobox "Cancel Selected\nFunction Aborted" 5 40 ; sleep 1
 		MenuMaint
 	fi
 	if [ $exitcode -eq 255 ]; then
-		dialog --ascii-lines --infobox "ESC Button Detected\nFunction Aborted" 5 40 ; sleep 2
+		dialog --ascii-lines --infobox "ESC Button Detected\nFunction Aborted" 5 40 ; sleep 1
 		MenuMaint
 	fi
 
@@ -2446,11 +2469,11 @@ if [ "$MAINT" -eq 2 ]; then
 		if [ $err -eq 0 ]; then
 			dialog --ascii-lines --infobox "Backup Config File $F1\nRestored to $dest" 5 60 ; sleep 5
 		else
-			dialog --ascii-lines --infobox "Restore Operation Failed" 5 40 ; sleep 2
+			dialog --ascii-lines --infobox "Restore Operation Failed" 5 40 ; sleep 1
 		
 		fi
 	else
-		dialog --ascii-lines --infobox "ERR - No File\nFunction Aborted" 5 40 ; sleep 2
+		dialog --ascii-lines --infobox "ERR - No File\nFunction Aborted" 5 40 ; sleep 1
         fi
 fi
 
@@ -2566,7 +2589,7 @@ returncode=$?
 exec 3>&-
 
 if [ $returncode -eq 1 ]; then
-        dialog --ascii-lines --infobox "No Data - Function Aborted\nSleeping 2 seconds" 10 30 ; sleep 2
+        dialog --ascii-lines --infobox "No Data - Function Aborted" 5 30 ; sleep 1
    MenuMain
 fi
 
@@ -2808,7 +2831,7 @@ returncode=$?
 
 
 if [ $returncode -eq 1 ]; then
-        dialog --ascii-lines --infobox "No Data - Function Aborted\nSleeping 2 seconds" 10 30 ; sleep 2
+        dialog --ascii-lines --infobox "No Data - Function Aborted" 5 30 ; sleep 1
         MenuMain
 fi
 
@@ -2861,7 +2884,7 @@ EditInfo
 
 ###############################
 function MenuMain(){
-
+sudo mount -o remount,rw / > /dev/null
 #echo "Starting Main Menu Dialog"
 
 HEIGHT=40
@@ -2897,7 +2920,7 @@ CHOICE=$(dialog --clear \
         	15 "Check - Set Modes and Enables" \
         	16 "Set Master All Modes - RO" \
         	17 "Last Heard" \
-        	18 "Start Test Funtion" 2>&1 )
+        	18 "Search Last Heard" 2>&1 )
 #>/dev/tty)
 
 #       "${OPTIONS[@]}" )
@@ -2916,14 +2939,14 @@ if [ $exitcode -eq 255 ]; then
   exit
 fi
 if [ $exitcode -eq 1 ]; then
-        dialog --ascii-lines --infobox "Cancel Selected - Exiting Script\nSleeping 2 seconds" 5 40 ; sleep 2
+        dialog --ascii-lines --infobox "Cancel Selected - Exiting Script" 5 40 ; sleep 1
          exit
    
 fi
 
 
 if [ -z "$CHOICE" ]; then
-        dialog --ascii-lines --infobox "Choice Box Empty - Exiting Script\nSleeping 2 seconds" 5 40 ; sleep 2
+        dialog --ascii-lines --infobox "Choice Box Empty - Exiting Script" 5 40 ; sleep 1
  exit
 fi
 
@@ -2946,7 +2969,7 @@ case $CHOICE in
         15) CheckSetModes ;;
         16) SelectMode ;;
         17) LastHeard ;;
-        18) MasterServ ;;
+        18) SearchLH ;;
 esac
 
 
