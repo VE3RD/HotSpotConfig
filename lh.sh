@@ -21,7 +21,7 @@ function GetCallInfo () {
 }
 
 function CheckLog(){
-if [ -f /etc/LastHeard.txt ]; then
+if [ -f /etc/lastheard.txt ]; then
 
 echo -e "\033[45m" 
 echo "Reading Log File"
@@ -40,7 +40,7 @@ var=$1
 
 x1=$(echo "$var" | tr '[:lower:]' '[:upper:]')
 if [ "$x1" == "NEW" ]; then
- sudo rm /etc/LastHeard.txt
+ sudo rm /etc/lastheard.txt
 fi
 
 pcall=""
@@ -157,7 +157,7 @@ LogStr=
    fi
 
 if [ ! -z "$LogStr" ]; then
-  echo "$LogStr" >> /etc/LastHeard.txt
+  echo "$LogStr" >> /etc/lastheard.txt
 fi
 
 sleep 0.1
