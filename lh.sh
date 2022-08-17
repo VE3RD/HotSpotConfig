@@ -25,8 +25,7 @@ if [ -f /etc/lastheard.txt ]; then
 
 echo -e "\033[45m" 
 echo "Reading Log File"
-cat /etc/LastHeard.txt
-#dialog --title "Last Heard Log File" --clear --ascii-lines --tailbox /etc/LastHeard.txt 20 0
+cat /etc/lastheard.txt
 errorcode=$?
 echo -e "\033[44m"
 fi
