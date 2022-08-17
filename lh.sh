@@ -7,8 +7,8 @@ Yellow='\033[0;33m'
 export NCURSES_NO_UTF8_ACS=1
 clear
 echo -e "\e[1;97;44m"
-
-
+cm=[0]
+declare -i cm=0
 
 function GetCallInfo () {
 
@@ -71,13 +71,13 @@ if [[ $LastLine == *"network end of voice"* ]]; then
 fi
 ##P25
 if [[ $LastLine == *"network transmission"* ]]; then
-        cm=3
-        call=$(echo "$LastLine"| cut -d " " -f 14)
+        cm=2
+        call=$(echo "$LastLine"| cut -d " " -f 9)
 fi
 
 if [[ $LastLine == *"network end of transmission"* ]]; then
-        cm=4
-        call=$(echo "$LastLine"| cut -d " " -f 14)
+        cm=3
+        call=$(echo "$LastLine"| cut -d " " -f 10)
 fi
  
 
@@ -87,10 +87,10 @@ fi
 #else
 
 #    echo "CM = $cm"
-rmode=$(echo "$LastLine" | cut -d " " -f 4)
+rmode=$(echo "$LastLine" | tr -d "," | cut -d " " -f 4)
 LogStr=
 
-   if [ "$cm" == 0 ]; then
+   if [ "$cm" -eq 0 ]; then
 	if [ "$call" != "$p0call" ]; then	
 		call=$(echo "$LastLine" | cut -d " " -f 12)
 		GetCallInfo
@@ -101,7 +101,7 @@ LogStr=
 		p2call=
 		p3call=
 	fi
-   elif [ "$cm" == 1 ]; then
+   elif [ "$cm" -eq 1 ]; then
 
 	if [ "$call" != "$p1call" ]; then
 		call=$(echo "$LastLine" | cut -d " " -f 14)
@@ -119,9 +119,9 @@ LogStr=
 	fi
  
 
-   elif [ "$cm" == 2 ]; then
+   elif [ $cm -eq 2 ]; then
 
-	if [ "$call" != "$p2call" ]; then	
+	if [[ "$call" != "$p2call" ]]; then	
 		call=$(echo "$LastLine" | cut -d " " -f 9)
 		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
@@ -131,14 +131,16 @@ LogStr=
 		p1call=
 		p3call=
 	fi
-   elif [ "$cm" == 3 ]; then
-	if [ "$call" != "$p3call" ]; then
+
+   elif [ $cm -eq 3 ]; then
+	if [[ "$call" != "$p3call" ]]; then
 		call=$(echo "$LastLine" | cut -d " " -f 10)
 		dur=$(echo "$LastLine" | cut -d " " -f 14)
 		pl=$(echo "$LastLine" | cut -d " " -f 16)
 		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
-		echo -e "\033[97m\033[44m$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl"
+                printf "\033[97m \033[44m"
+                echo  "$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL:$pl"
 		LogStr="$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl"
 		p3call="$call"
 		p0call=
