@@ -2447,7 +2447,7 @@ if [ "$exitcode" -eq 255 ]; then
 fi
 
 if [ "$exitcode" -eq 1 ]; then
-        dialog --ascii-lines ==clear --infobox "Return Selected - Returning to Main Menu" 5 60 ; sleep 1
+        dialog --ascii-lines --clear --infobox "Return Selected - Returning to Main Menu" 5 60 ; sleep 1
 	clear
          MenuMain
 fi
