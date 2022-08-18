@@ -61,11 +61,11 @@ LastLine=$(tail -n 1 /var/log/pi-star/MMDVM-2022* | tail -n 1)
 
 str="voice header"
 ##DMR
-if [[ $LastLine == *"network voice header"* ]]; then
+if [[ $LastLine == *"voice header"* ]]; then
 	cm=0
  	call=$(echo "$LastLine"| cut -d " " -f 12)
 fi
-if [[ $LastLine == *"network end of voice"* ]]; then
+if [[ $LastLine == *"voice transmission"* ]]; then
 	cm=1
  	call=$(echo "$LastLine"| cut -d " " -f 14)
 fi
@@ -79,7 +79,10 @@ if [[ $LastLine == *"network end of transmission"* ]]; then
         cm=3
         call=$(echo "$LastLine"| cut -d " " -f 10)
 fi
- 
+ RFMode=
+if [[ $LastLine == *"RF"* ]]; then
+       RFMode="RF"
+fi
 
 
 #if [ "$call" == "$pcall" ]; then
@@ -88,6 +91,7 @@ fi
 
 #    echo "CM = $cm"
 rmode=$(echo "$LastLine" | tr -d "," | cut -d " " -f 4)
+
 LogStr=
 
    if [ "$cm" -eq 0 ] || [ "$cm" -eq 2 ]; then
@@ -98,7 +102,7 @@ LogStr=
 		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
 		printf "\033[97m \033[44m"
-		echo -e "---Active - $dt $rmode $call  $Name  $City  $State  $Country $tg"
+		echo -e "---Active - $dt $RFMode $rmode $call, $Name, $City. $State, $Country TG:$tg"
 		p0call="$call"
 		p1call=
 		p2call=
@@ -118,8 +122,8 @@ LogStr=
 		ber=$(echo "$LastLine" | grep -o "BER:.*" | cut -d " " -f2)
 		pl=$(echo "$LastLine" | grep -o "seconds.*" | cut -d " " -f2)
 		printf "\033[33m \033[44m"
-		echo  "$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL:$pl $tg"
-		LogStr="$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl $tg"
+		echo -e "$dt $RFMode $rmode $call $Name, $City, $State, $Country  Dur:$dur Secs  PL:$pl TG:$tg"
+		LogStr="$dt $RFMode $rmode $call  $Name, $City, $State, $Country  Dur:$dur Secs  PL:$pl TG:$tg"
 		p1call="$call"
 		p0call=
 		p2call=

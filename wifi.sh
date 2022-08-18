@@ -46,8 +46,8 @@ function ScanWiFi(){
 options=$( iwlist wlan0 scan |grep -wv \x00 | grep ESSID | cut -d ":" -f2 |  awk '{print $1, FNR, "N/A"}')
 ssid=$(dialog \
 	--title "WiFi ESSID Selector" \
+	--ascii-lines \
         --stdout \
-        --ascii-lines \
       --radiolist "Select ESSID from the following List: MODE=$mode" 22 90 16 \
         "${cmd[@]}" ${options})
 exitcode=$?
