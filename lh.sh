@@ -90,64 +90,42 @@ fi
 rmode=$(echo "$LastLine" | tr -d "," | cut -d " " -f 4)
 LogStr=
 
-   if [ "$cm" -eq 0 ]; then
+   if [ "$cm" -eq 0 ] || [ "$cm" -eq 2 ]; then
 	if [ "$call" != "$p0call" ]; then	
-		call=$(echo "$LastLine" | cut -d " " -f 12)
+#		call=$(echo "$LastLine" | cut -d " " -f 12)
+		call=$(echo "$LastLine" | grep -o "from.*" | cut -d " " -f2)
+		tg=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f2)
 		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
-		echo -e "\033[33m\033[44m ---Active - $dt $rmode $call  $Name  $City  $State  $Country"
+		printf "\033[97m \033[44m"
+		echo -e "---Active - $dt $rmode $call  $Name  $City  $State  $Country $tg"
 		p0call="$call"
 		p1call=
 		p2call=
 		p3call=
 	fi
-   elif [ "$cm" -eq 1 ]; then
+   elif [ "$cm" -eq 1 ] || [ "$cm" -eq 3 ]; then
 
 	if [ "$call" != "$p1call" ]; then
-		call=$(echo "$LastLine" | cut -d " " -f 14)
-		dur=$(echo "$LastLine" | cut -d " " -f 18)
-		pl=$(echo "$LastLine" | cut -d " " -f 20)
+		call=$(echo "$LastLine" | grep -o "from.*" | cut -d " " -f2)
+#		call=$(echo "$LastLine" | cut -d " " -f 14)
+#		dur=$(echo "$LastLine" | cut -d " " -f 18)
+#		pl=$(echo "$LastLine" | cut -d " " -f 20)
 		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
-		printf "\033[97m \033[44m"
-		echo  "$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL:$pl"
-		LogStr="$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl"
+		tg=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f2 | tr -d ",")
+		dur=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f3)
+		ber=$(echo "$LastLine" | grep -o "BER:.*" | cut -d " " -f2)
+		pl=$(echo "$LastLine" | grep -o "seconds.*" | cut -d " " -f2)
+		printf "\033[33m \033[44m"
+		echo  "$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL:$pl $tg"
+		LogStr="$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl $tg"
 		p1call="$call"
 		p0call=
 		p2call=
 		p3call=
 	fi
  
-
-   elif [ $cm -eq 2 ]; then
-
-	if [[ "$call" != "$p2call" ]]; then	
-		call=$(echo "$LastLine" | cut -d " " -f 9)
-		GetCallInfo
-		dt=`date '+%Y-%m-%d %H:%M:%S'`
-		echo -e "\033[33m\033[44m ---Active - $dt $rmode $call  $Name  $City  $State  $Country "
-		p2call="$call"
-		p0call=
-		p1call=
-		p3call=
-	fi
-
-   elif [ $cm -eq 3 ]; then
-	if [[ "$call" != "$p3call" ]]; then
-		call=$(echo "$LastLine" | cut -d " " -f 10)
-		dur=$(echo "$LastLine" | cut -d " " -f 14)
-		pl=$(echo "$LastLine" | cut -d " " -f 16)
-		GetCallInfo
-		dt=`date '+%Y-%m-%d %H:%M:%S'`
-                printf "\033[97m \033[44m"
-                echo  "$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL:$pl"
-		LogStr="$dt $rmode $call  $Name  $City  $State  $Country Dur: $dur  PL: $pl"
-		p3call="$call"
-		p0call=
-		p2call=
-		p1call=
-
-	fi
     else
         call="NoCall"
 	p0call="$call"
