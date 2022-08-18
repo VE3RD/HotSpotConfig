@@ -81,7 +81,9 @@ if [[ $LastLine == *"network end of transmission"* ]]; then
 fi
  RFMode=
 if [[ $LastLine == *"RF"* ]]; then
-       RFMode="RF"
+       RFMode="R-"
+else
+	RFMode="N-"
 fi
 
 
@@ -91,7 +93,7 @@ fi
 
 #    echo "CM = $cm"
 rmode=$(echo "$LastLine" | tr -d "," | cut -d " " -f 4)
-
+rmode="$RFMode$rmode"
 LogStr=
 
    if [ "$cm" -eq 0 ] || [ "$cm" -eq 2 ]; then
@@ -101,8 +103,9 @@ LogStr=
 		tg=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f2)
 		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
+		dtt=`date '+%H:%M:%S'`
 		printf "\033[97m \033[44m"
-		echo -e "---Active - $dt $RFMode $rmode $call, $Name, $City. $State, $Country TG:$tg"
+		echo -e "--Active - $dtt $rmode $call $Name, $City, $State, $Country TG:$tg"
 		p0call="$call"
 		p1call=
 		p2call=
@@ -112,18 +115,23 @@ LogStr=
 
 	if [ "$call" != "$p1call" ]; then
 		call=$(echo "$LastLine" | grep -o "from.*" | cut -d " " -f2)
-#		call=$(echo "$LastLine" | cut -d " " -f 14)
-#		dur=$(echo "$LastLine" | cut -d " " -f 18)
-#		pl=$(echo "$LastLine" | cut -d " " -f 20)
 		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
+	if [ "$RFMode" == "RF" ]; then
+		tg=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f2 | tr -d ",")
+		dur=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f3)
+		ber=$(echo "$LastLine" | grep -o "BER:.*" | cut -d " " -f2)
+		pl=0
+
+	else
 		tg=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f2 | tr -d ",")
 		dur=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f3)
 		ber=$(echo "$LastLine" | grep -o "BER:.*" | cut -d " " -f2)
 		pl=$(echo "$LastLine" | grep -o "seconds.*" | cut -d " " -f2)
+	fi
 		printf "\033[33m \033[44m"
-		echo -e "$dt $RFMode $rmode $call $Name, $City, $State, $Country  Dur:$dur Secs  PL:$pl TG:$tg"
-		LogStr="$dt $RFMode $rmode $call  $Name, $City, $State, $Country  Dur:$dur Secs  PL:$pl TG:$tg"
+		echo -e "$dt $rmode $call $Name, $City, $State, $Country  Dur:$dur Secs  PL:$pl TG:$tg"
+		LogStr="$dt $rmode $call  $Name, $City, $State, $Country  Dur:$dur Secs  PL:$pl TG:$tg"
 		p1call="$call"
 		p0call=
 		p2call=
