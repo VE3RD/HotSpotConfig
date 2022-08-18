@@ -71,12 +71,12 @@ if [[ $LastLine == *"voice transmission"* ]]; then
 fi
 ##P25
 if [[ $LastLine == *"network transmission"* ]]; then
-        cm=2
+        cm=0
         call=$(echo "$LastLine"| cut -d " " -f 9)
 fi
 
 if [[ $LastLine == *"network end of transmission"* ]]; then
-        cm=3
+        cm=1
         call=$(echo "$LastLine"| cut -d " " -f 10)
 fi
  RFMode=
@@ -94,48 +94,45 @@ fi
 #    echo "CM = $cm"
 rmode=$(echo "$LastLine" | tr -d "," | cut -d " " -f 4)
 rmode="$RFMode$rmode"
+
+call=$(echo "$LastLine" | grep -o "from.*" | cut -d " " -f2)
+GetCallInfo
+call="$call""  "
+call="${call:0:6}"
+
 LogStr=
 
    if [ "$cm" -eq 0 ] || [ "$cm" -eq 2 ]; then
 	if [ "$call" != "$p0call" ]; then	
-#		call=$(echo "$LastLine" | cut -d " " -f 12)
-		call=$(echo "$LastLine" | grep -o "from.*" | cut -d " " -f2)
 		tg=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f2)
-		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
 		dtt=`date '+%H:%M:%S'`
 		printf "\033[97m \033[44m"
 		echo -e "--Active - $dtt $rmode $call $Name, $City, $State, $Country TG:$tg"
+		LogStr="--Active - $dtt $rmode $call  $Name, $City, $State, $Country TG:$tg"
 		p0call="$call"
 		p1call=
-		p2call=
-		p3call=
 	fi
    elif [ "$cm" -eq 1 ] || [ "$cm" -eq 3 ]; then
 
 	if [ "$call" != "$p1call" ]; then
-		call=$(echo "$LastLine" | grep -o "from.*" | cut -d " " -f2)
-		GetCallInfo
 		dt=`date '+%Y-%m-%d %H:%M:%S'`
-	if [ "$RFMode" == "RF" ]; then
-		tg=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f2 | tr -d ",")
-		dur=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f3)
-		ber=$(echo "$LastLine" | grep -o "BER:.*" | cut -d " " -f2)
-		pl=0
-
-	else
-		tg=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f2 | tr -d ",")
-		dur=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f3)
-		ber=$(echo "$LastLine" | grep -o "BER:.*" | cut -d " " -f2)
-		pl=$(echo "$LastLine" | grep -o "seconds.*" | cut -d " " -f2)
-	fi
+		if [ "$RFMode" == "RF" ]; then
+			tg=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f2 | tr -d ",")
+			dur=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f3)
+			ber=$(echo "$LastLine" | grep -o "BER:.*" | cut -d " " -f2)
+			pl=0
+		else
+			tg=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f2 | tr -d ",")
+			dur=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f3)
+			ber=$(echo "$LastLine" | grep -o "BER:.*" | cut -d " " -f2)
+			pl=$(echo "$LastLine" | grep -o "seconds.*" | cut -d " " -f2)
+		fi
 		printf "\033[33m \033[44m"
 		echo -e "$dt $rmode $call $Name, $City, $State, $Country  Dur:$dur Secs  PL:$pl TG:$tg"
 		LogStr="$dt $rmode $call  $Name, $City, $State, $Country  Dur:$dur Secs  PL:$pl TG:$tg"
 		p1call="$call"
 		p0call=
-		p2call=
-		p3call=
 	fi
  
     else
