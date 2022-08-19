@@ -2625,23 +2625,23 @@ CHOICE=$(dialog --clear \
                 --title "$TITLE" \
                 --menu "$MENU" \
                 $HEIGHT $WIDTH $CHOICE_HEIGHT \
-          	1 "Edit General Section" \
-         	2 "Edit Info Section" \
-         	3 "Edit Log Section" \
-         	4 "Edit Modem Section" \
-         	5 "Edit DMR Section" \
-         	6 "Edit P25 Section" \
-         	7 "Edit NXDN Section" \
-         	8 "Edit YSF Section" \
-         	9 "Edit Nextion Sections" \
-        	10 "Edit Non Nextion Displays - RO" \
+          	1 "Edit MMDVM General Section" \
+         	2 "Edit MMDVM Info Section" \
+         	3 "Edit MMDVM Log Section" \
+         	4 "Edit MMDVM Modem Section" \
+         	5 "Edit MMDVM DMR Section" \
+         	6 "Edit MMDVM P25 Section" \
+         	7 "Edit MMDVM NXDN Section" \
+         	8 "Edit MMDVM YSF Section" \
+         	9 "Edit MMDVM Nextion Sections" \
+        	10 "Edit MMDVM Other Displays - RO" \
         	11 "Edit TBA - NYA" \
-        	12 "Edit Timers" \
+        	12 "Edit HotSpot Timers" \
         	13 "Edit DMRGateway" \
         	14 "Maintenance & Backup/Restore" \
         	15 "Check - Set Modes and Enables" \
         	16 "Set Master All Modes - RO" \
-        	17 "Last Heard" \
+        	17 "Open Last Heard List" \
         	18 "Search Last Heard" \
         	19 "View Last Heard Live" \
         	20 "Call Sign Lookup (RadioID)" 2>&1 )
