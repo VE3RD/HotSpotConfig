@@ -96,6 +96,11 @@ rmode=$(echo "$LastLine" | tr -d "," | cut -d " " -f 4)
 rmode="$RFMode$rmode"
 
 call=$(echo "$LastLine" | grep -o "from.*" | cut -d " " -f2)
+
+if [ -z "$call" ]; then 
+	## No Callsign - Abort Further Processing
+	cm=99
+fi
 GetCallInfo
 call="$call""  "
 call="${call:0:6}"
