@@ -45,8 +45,8 @@ function ScanWiFi(){
 
 options=$( iwlist wlan0 scan |grep -wv \x00 | grep ESSID | cut -d ":" -f2 |  awk '{print $1, FNR, "N/A"}')
 ssid=$(dialog \
-	--title "WiFi ESSID Selector" \
 	--ascii-lines \
+	--title "WiFi ESSID Selector" \
         --stdout \
       --radiolist "Select ESSID from the following List: MODE=$mode" 22 90 16 \
         "${cmd[@]}" ${options})
@@ -54,15 +54,14 @@ exitcode=$?
 
 if [ $exitcode -eq 0 ]; then
 pwd=$(dialog \
-	--ascii-lines \
 	--stdout \
+	--ascii-lines \
 	--inputbox "Enter your Password for $ssid" 20 30 )
 
 	wificmd="sudo nmcli dev wifi connect ""$ssid"" password ""$pwd"
-	
 	dialog \
-        	--ascii-lines \
         	--stdout \
+		--ascii-lines \
 		--title "Selected ESID $ssid   MODE = $Mode" \
         	--infobox "\nResults Ready to Set\n\nESSID = $ssid\nPassw = $pwd\n\n Command= $wificmd" 20 80  
 
