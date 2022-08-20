@@ -119,9 +119,10 @@ LogStr=
 #		dtt=`date '+%H:%M:%S'`
 		printf "\033[97m \033[44m"
 		echo -e "--Active - $tt $rmode $call $Name, $City, $State, $Country TG:$tg"
-		LogStr="--Active - dtt $rmode $call  $Name, $City, $State, $Country TG:$tg"
+#		LogStr="--Active - $tt $rmode $call  $Name, $City, $State, $Country TG:$tg"
 		p0call="$call"
 		p1call=
+		act=1
 	fi
    elif [ "$cm" -eq 1 ] || [ "$cm" -eq 3 ]; then
 
@@ -139,12 +140,15 @@ LogStr=
 			pl=$(echo "$LastLine" | grep -o "seconds.*" | cut -d " " -f2)
 		fi
 		printf "\033[33m \033[44m"
+	if [ "$act" == 1 ]; then
+		tput cuu 1
+	fi
 		echo -e "$dt $rmode $call $Name, $City, $State, $Country  Dur:$dur Secs  PL:$pl TG:$tg"
 		LogStr="$dt $rmode $call  $Name, $City, $State, $Country  Dur:$dur Secs  PL:$pl TG:$tg"
 		p1call="$call"
 		p0call=
 	fi
- 
+ 	act=0
     else
         call="NoCall"
 	p0call="$call"
