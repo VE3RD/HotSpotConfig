@@ -74,17 +74,24 @@ if [[ $LastLine == *"network transmission"* ]]; then
         cm=0
         call=$(echo "$LastLine"| cut -d " " -f 9)
 fi
-
 if [[ $LastLine == *"network end of transmission"* ]]; then
         cm=1
         call=$(echo "$LastLine"| cut -d " " -f 10)
 fi
+if [[ $LastLine == *"watchdog has expired"* ]]; then
+        cm=2
+	dur=$(echo "$LastLine" | grep -o "expired.*" | cut -d " " -f2)
+	pl=$(echo "$LastLine" | grep -o "seconds.*" | cut -d " " -f2)
+
+fi
+
  RFMode=
 if [[ $LastLine == *"RF"* ]]; then
        RFMode="R-"
 else
 	RFMode="N-"
 fi
+#M: 2022-08-22 01:35:33.284 DMR Slot 2, network watchdog has expired, 0.1 seconds, 0% packet loss, BER: 0.0%
 
 
 #if [ "$call" == "$pcall" ]; then
@@ -124,7 +131,7 @@ LogStr=
 		p1call=
 		act=1
 	fi
-   elif [ "$cm" -eq 1 ] || [ "$cm" -eq 3 ]; then
+   elif [ "$cm" -eq 1 ] || [ "$cm" -eq 2 ]; then
 
 	if [ "$call" != "$p1call" ]; then
 	#	dt=`date '+%Y-%m-%d %H:%M:%S'`
@@ -133,11 +140,15 @@ LogStr=
 			dur=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f3)
 			ber=$(echo "$LastLine" | grep -o "BER:.*" | cut -d " " -f2)
 			pl=0
-		else
-			tg=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f2 | tr -d ",")
-			dur=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f3)
-			ber=$(echo "$LastLine" | grep -o "BER:.*" | cut -d " " -f2)
-			pl=$(echo "$LastLine" | grep -o "seconds.*" | cut -d " " -f2)
+		else	
+			if [ "$cm" == 2 ]; then
+				cm=2
+			else
+				tg=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f2 | tr -d ",")
+				ber=$(echo "$LastLine" | grep -o "BER:.*" | cut -d " " -f2)
+				dur=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f3)
+				pl=$(echo "$LastLine" | grep -o "seconds.*" | cut -d " " -f2)
+			fi
 		fi
 		printf "\033[33m \033[44m"
 	if [ "$act" == 1 ]; then

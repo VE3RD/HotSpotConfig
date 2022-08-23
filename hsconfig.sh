@@ -111,7 +111,8 @@ fi
 	--ascii-lines \
 	--backtitle "Hotspot Configurator - by VE3RD" \
 	--title "History Last Heard Filtered" \
-	--prgbox "Filtered File" "grep $inp /etc/lastheard.txt" 20 90
+	--prgbox "Filtered File - $inp" "grep $inp /etc/lastheard.txt" 40 120
+
 MenuMain
 
 }
