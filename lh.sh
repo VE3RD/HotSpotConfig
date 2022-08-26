@@ -82,23 +82,17 @@ if [[ $LastLine == *"watchdog has expired"* ]]; then
         cm=2
 	dur=$(echo "$LastLine" | grep -o "expired.*" | cut -d " " -f2)
 	pl=$(echo "$LastLine" | grep -o "seconds.*" | cut -d " " -f2)
-
 fi
 
  RFMode=
 if [[ $LastLine == *"RF"* ]]; then
        RFMode="R-"
+	rfm="RF"
 else
 	RFMode="N-"
+	rfm="NET"
 fi
-#M: 2022-08-22 01:35:33.284 DMR Slot 2, network watchdog has expired, 0.1 seconds, 0% packet loss, BER: 0.0%
 
-
-#if [ "$call" == "$pcall" ]; then
-#  j=j
-#else
-
-#    echo "CM = $cm"
 rmode=$(echo "$LastLine" | tr -d "," | cut -d " " -f 4)
 rmode="$RFMode$rmode"
 
@@ -108,6 +102,20 @@ if [ -z "$call" ]; then
 	## No Callsign - Abort Further Processing
 	cm=99
 fi
+
+LastGWLine=$(tail -n 1 /var/log/pi-star/DMRGateway-2022* | tail -n 1)
+
+if [[ $LastGWLine == *"NetRX"* ]]; then
+   
+        GWN=$(echo "$LastGWLine"| cut -d " " -f 6)
+fi
+if [[ $LastGWLine == *"RFRX"* ]]; then
+        
+        GWN=$(echo "$LastGWLine"| cut -d " " -f 6)
+fi
+
+
+
 GetCallInfo
 call="$call""  "
 call="${call:0:6}"
@@ -118,22 +126,54 @@ dt="$dd $tt"
 
 
 LogStr=
+##Active Calls cm=0
 
-   if [ "$cm" -eq 0 ] || [ "$cm" -eq 2 ]; then
+   if [ "$cm" -eq 0 ]; then
 	if [ "$call" != "$p0call" ]; then	
 		tg=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f2)
 #		dt=`date '+%Y-%m-%d %H:%M:%S'`
 #		dtt=`date '+%H:%M:%S'`
 		printf "\033[97m \033[44m"
-		echo -e "--Active - $tt $rmode $call $Name, $City, $State, $Country TG:$tg"
-#		LogStr="--Active - $tt $rmode $call  $Name, $City, $State, $Country TG:$tg"
+		echo -e "--Active - $tt $rmode $call $Name, $City, $State, $Country TG:$tg GWNet:$GWN"
+#		LogStr="--Active - $tt $rmode $call  $Name, $City, $State, $Country TG:$tg GWNet:$GWN"
 		p0call="$call"
 		p1call=
+		p2call=
 		act=1
 	fi
-   elif [ "$cm" -eq 1 ] || [ "$cm" -eq 2 ]; then
-
+   elif [ "$cm" -eq 1 ]; then
+#End of Transmission cm=1
 	if [ "$call" != "$p1call" ]; then
+	#	dt=`date '+%Y-%m-%d %H:%M:%S'`
+#M: 2022-08-26 16:01:43.538 DMR Slot 2, received RF voice header from VE3RD to TG 31665
+#M: 2022-08-26 16:01:43.959 DMR Slot 2, received RF end of voice transmission from VE3RD to TG 31665, 0.4 seconds, BER: 0.5%, RSSI: -47/-47/-47 dBm
+
+		if [ "$rfm" == "RF" ]; then
+			tg=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f2 | tr -d ",")
+			dur=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f3)
+			ber=$(echo "$LastLine" | grep -o "BER:.*" | cut -d " " -f2)
+			pl="N/A"
+		else
+			tg=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f2 | tr -d ",")
+			ber="N/A"
+			dur=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f3)
+			pl=$(echo "$LastLine" | grep -o "seconds.*" | cut -d " " -f2)
+
+		fi
+		printf "\033[33m \033[44m"
+		if [ "$act" == 1 ]; then
+			tput cuu 1
+        	fi
+		echo -e "$dt $rmode $call $Name, $City, $State, $Country  Dur:$dur Secs BER:$ber  PL:$pl TG:$tg  GWNet:$GWN"
+		LogStr="$dt $rmode $call  $Name, $City, $State, $Country  Dur:$dur Secs BER:$ber  PL:$pl TG:$tg  GWNet:$GWN"
+		p1call="$call"
+		p0call=
+		p2call=
+	fi
+ 	act=0
+     elif [ "$cm" -eq 2 ]; then
+#Watchdog Timeout cm=2
+	if [ "$call" != "$p2call" ]; then
 	#	dt=`date '+%Y-%m-%d %H:%M:%S'`
 		if [ "$RFMode" == "RF" ]; then
 			tg=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f2 | tr -d ",")
@@ -141,25 +181,23 @@ LogStr=
 			ber=$(echo "$LastLine" | grep -o "BER:.*" | cut -d " " -f2)
 			pl=0
 		else	
-			if [ "$cm" == 2 ]; then
-				cm=2
-			else
-				tg=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f2 | tr -d ",")
-				ber=$(echo "$LastLine" | grep -o "BER:.*" | cut -d " " -f2)
-				dur=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f3)
-				pl=$(echo "$LastLine" | grep -o "seconds.*" | cut -d " " -f2)
-			fi
+			tg=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f2 | tr -d ",")
+			ber=$(echo "$LastLine" | grep -o "BER:.*" | cut -d " " -f2)
+			dur=$(echo "$LastLine" | grep -o "TG.*" | cut -d " " -f3)
+			pl=$(echo "$LastLine" | grep -o "seconds.*" | cut -d " " -f2)
 		fi
 		printf "\033[33m \033[44m"
-	if [ "$act" == 1 ]; then
-		tput cuu 1
-	fi
-		echo -e "$dt $rmode $call $Name, $City, $State, $Country  Dur:$dur Secs  PL:$pl TG:$tg"
-		LogStr="$dt $rmode $call  $Name, $City, $State, $Country  Dur:$dur Secs  PL:$pl TG:$tg"
+		if [ "$act" == 1 ]; then
+			tput cuu 1
+        	fi
+		echo -e "$dt $rmode $call $Name, $City, $State, $Country  Dur:$dur Secs  PL:$pl TG:$tg  GWNet:$GWN"
+		LogStr="$dt $rmode $call  $Name, $City, $State, $Country  Dur:$dur Secs  PL:$pl TG:$tg  GWNet:$GWN"
 		p1call="$call"
 		p0call=
+		p2call=
 	fi
  	act=0
+
     else
         call="NoCall"
 	p0call="$call"
