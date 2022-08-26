@@ -63,7 +63,7 @@ function exitcode
 	This Script will Now Stop'"\n$exittext"
 	dialog --title "  Programmed Exit  " \
 	--backtitle "Hotspot Configurator - by VE3RD" \
-	--ascii-lines --msgbox "$txt" 8 78
+	--shadow --msgbox "$txt" 8 78
 	tput setab 9 mode="" clear echo -e '\e[1;40m' run="Done" 
 exit
 
@@ -71,7 +71,7 @@ exit
 
 function SearchRID(){
 inpcall=$(dialog \
-	--ascii-lines \
+	--shadow \
 	--title "Data Search on Stripped.csv (Radioid.net)" \
 	--backtitle "Hotspot Configurator - by VE3RD" \
 	--stdout \
@@ -81,7 +81,7 @@ if [ $exitcode -eq 1 ]; then
      MenuMain
 fi
       dialog \
-	--ascii-lines \
+	--shadow \
 	--backtitle "Hotspot Configurator - by VE3RD" \
 	--title "History Last Heard Filtered" \
 	--prgbox "Filtered File" "grep $inpcall /usr/local/etc/stripped.csv" 20 100
@@ -90,7 +90,7 @@ MenuMain
 
 function ViewLH(){
 disown ./lh.sh
-dialog --ascii-lines --backtitle "Hotspot Configurator - by VE3RD" --title " Active view of Last Heard List " --tailbox "/etc/lastheard.txt" 60 100
+dialog --shadow --backtitle "Hotspot Configurator - by VE3RD" --title " Active view of Last Heard List " --tailbox "/etc/lastheard.txt" 60 100
 MenuMain
 
 }
@@ -98,7 +98,7 @@ MenuMain
 function SearchLH(){
 
 inp=$(dialog \
-	--ascii-lines \
+	--shadow \
 	--title "Last Heard History Search" \
 	--backtitle "Hotspot Configurator - by VE3RD" \
 	--stdout \
@@ -108,7 +108,7 @@ if [ $exitcode -eq 1 ]; then
      MenuMain
 fi
       dialog \
-	--ascii-lines \
+	--shadow \
 	--backtitle "Hotspot Configurator - by VE3RD" \
 	--title "History Last Heard Filtered" \
 	--prgbox "Filtered File - $inp" "grep $inp /etc/lastheard.txt" 40 120
@@ -121,7 +121,7 @@ MenuMain
 function SelectMode(){
 
 smode=$(dialog \
-        --ascii-lines \
+        --shadow \
         --keep-tite \
         --clear \
 	--backtitle "Hotspot Configurator - by VE3RD" \
@@ -174,7 +174,7 @@ SearchBox
 
 function SearchBox(){
 sbox=$(dialog \
-        --ascii-lines \
+        --shadow \
 	--backtitle "Hotspot Configurator - by VE3RD" \
         --clear \
         --stdout \
@@ -215,7 +215,7 @@ cmd=$(dialog --title "Master Server Selector" \
 	--keep-tite \
         --stdout \
         --colors \
-        --ascii-lines \
+        --shadow \
       --radiolist "Select $modes Server:" 22 90 16 \
         "${cmd[@]}" ${options})
 
@@ -245,7 +245,7 @@ function Parse () {
 
 
   if [ -z "$cmd" ]; then
-          dialog --ascii-lines --clear --title "Parse Function" --msgbox "No Selection Found" 3 70
+          dialog --shadow --clear --title "Parse Function" --msgbox "No Selection Found" 3 70
         exit
 
   fi
@@ -287,7 +287,7 @@ function Parse () {
 
         ;;
      esac
- dialog --ascii-lines --clear --title "Selected $modes Server Detail" --msgbox "$dstr" 10 70
+ dialog --shadow --clear --title "Selected $modes Server Detail" --msgbox "$dstr" 10 70
 
 
 #if [ "$Net1" != "$dm1" ]; then 
@@ -307,7 +307,7 @@ function MasterServ(){
 
 exec 3>&1
 
-SrcTxt=$(dialog  --ascii-lines \
+SrcTxt=$(dialog  --shadow \
 	--backtitle "Hotspot Configurator - by VE3RD" \
         --title "  Search for a Master Server Step 1 " \
         --inputbox "Enter your Search Text" 8 40 \
@@ -330,7 +330,7 @@ echo "$RADIOLIST"
 
 SvrStr=$(dialog \
 	--backtitle "Hotspot Configurator - by VE3RD" \
-	--ascii-lines \
+	--shadow \
         --title "  DMR Master Sever List " \
 	--menu "Select the DMR Master Server" 20 70 10 0 \
 	$RADIOLIST \
@@ -363,8 +363,8 @@ echo "$SvrPassw"
 echo "$SvrPort"
 exit
 
-#dialog --ascii-lines --infobox "Server Name = $SvrName\nServer Address = $SvrAddr\nPassword = $SvrPassw\Port = $SvrPort\" 10 60 ; sleep 1
-dialog --ascii-lines \
+#dialog --shadow --infobox "Server Name = $SvrName\nServer Address = $SvrAddr\nPassword = $SvrPassw\Port = $SvrPort\" 10 60 ; sleep 1
+dialog --shadow \
 	--backtitle "Hotspot Configurator - by VE3RD" \
         --title " Details of Selected DMR Master Server " \
 	--msgbox "Server Name = $SvrName\nServer Address = $SvrAddr\nPassword = $SvrPassw\nPort = $SvrPort" 10 60 
@@ -395,7 +395,7 @@ if [ -z $YSFG ]; then YSFG="Stopped" ; fi
 if [ -z $NXDNG ]; then NXDNG="Stopped" ; fi
 
 
-dialog  --ascii-lines \
+dialog  --shadow \
 	--backtitle "Hotspot Configurator - by VE3RD" \
         --title "  Running Services  " \
     	--mixedform " Check List - Display ONLY:" 20 40 12 \
@@ -443,7 +443,7 @@ echo "DMR Net4 Enabled = $dm4"
         --ok-label "Submit" \
 	--backtitle "Hotspot Configurator - by VE3RD" \
 	--stdout \
-        --ascii-lines \
+        --shadow \
         --mixedform "Modes Enable and DMRGateay Enables (Editable)" 25 60 20 \
         "Op Modes"    	1 1 "Op Modes"  	1 15 35 0 2 \
         "D-Star"       	2 1 "$md1"     		2 15 35 0 0 \
@@ -532,7 +532,7 @@ CheckSetModes
 
 function LogMon(){
 F1=$(dialog \
-        --ascii-lines \
+        --shadow \
         --title "Log File List" \
  	--backtitle "Hotspot Configurator - by VE3RD" \
        --begin 1 10 \
@@ -545,11 +545,11 @@ echo "$returncode"
 
 
 if [ $returncode -eq 1 ]; then
-        dialog --ascii-lines --infobox "Cancel Selected" 5 30 ; sleep 1
+        dialog --shadow --infobox "Cancel Selected" 5 30 ; sleep 1
    MenuMaint
 fi
 if [ $returncode -eq 255 ]; then
-        dialog --ascii-lines --infobox "ESC Button Pressed" 5 30 ; sleep 1
+        dialog --shadow --infobox "ESC Button Pressed" 5 30 ; sleep 1
    MenuMaint
 fi
 
@@ -557,12 +557,12 @@ fi
 if [ ! -z "$F1" ]; then
 	echo "File = $F1"
 else
-        dialog --ascii-lines --infobox "You Forgot to Select a File with the Space Bar\nGo Back and Try Again" 6 30 ; sleep 1
+        dialog --shadow --infobox "You Forgot to Select a File with the Space Bar\nGo Back and Try Again" 6 30 ; sleep 1
 	MenuMaint
 fi
 
 F2=$(dialog \
-        --ascii-lines \
+        --shadow \
 	--backtitle "Hotspot Configurator - by VE3RD" \
         --stdout \
         --title "Please choose a file" \
@@ -600,7 +600,7 @@ esac
 }
 #############
 function EditModeGroup(){
-   dialog --ascii-lines --infobox "Not Yet Implemented" 5 40 ; sleep 1
+   dialog --shadow --infobox "Not Yet Implemented" 5 40 ; sleep 1
 	MenuMain
 }
 ############
@@ -637,7 +637,7 @@ mm2=$(sed -nr "/^\[General]/ { :l /NetModeHang[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b
 echo "RFModeHang - $mm1"
 echo "NetModeHang - $mm2"
 
-tim=$(dialog  --ascii-lines \
+tim=$(dialog  --shadow \
 	--stdout \
 	--backtitle "Hotspot Configurator - by VE3RD" \
         --title " RF / Net / ModeHang Timers  " \
@@ -803,7 +803,7 @@ sudo sed -i '/^\[/h;G;/General]/s/\(^NetModeHang=\).*/\1'"$mmNMH"'/m;P;d' /etc/m
 fi
 
 
-dialog --ascii-lines --infobox "Data Write Complete" 5 40 ; sleep 1
+dialog --shadow --infobox "Data Write Complete" 5 40 ; sleep 1
 
 mmdvmhost.service restart ; p25gateway.service restart ; nxdngayeway.service restart 
 
@@ -838,7 +838,7 @@ exec 3>&1
 	--colors \
 	--extra-label "Next Page" \
 	--backtitle "Hotspot Configurator - by VE3RD" \
-	--ascii-lines \
+	--shadow \
 	--mixedform "DMRGateway $sect Configuration Items (Editable)" 30 60 15 \
 	"Jump To Net" 	1 1 	"0" 		1 15 35 0 0 \
 	"DMR Net $N" 	3 1 	"$DMR Net $N" 	3 15 35 0 2 \
@@ -974,7 +974,7 @@ exec 3>&1
 	--extra-button \
 	--extra-label "$elabel" \
 	--backtitle "Hotspot Configurator - by VE3RD" \
-        --ascii-lines \
+        --shadow \
         --mixedform "DMRGateway Configuration Items\nItems marked -gw4 are only available in DMRGateway-4 by VE3RD" 30 70 30 \
         "General"    		1 1 "General"  	1 22 35 0 2 \
         "RuleTrace"    		2 1 "$g1"  	2 22 35 0 0 \
@@ -1122,7 +1122,7 @@ exec 3>&1
         --title "MMDVM Log Section" \
 	--ok-label "Submit" \
 	--backtitle "Hotspot Configurator - by VE3RD" \
-        --ascii-lines \
+        --shadow \
         --mixedform "MMDVM Log  Configuration Items (Editable)" \
         20 50 0 \
         "DisplayLevel"	1 1 "$l1"  1 15 35 0 0 \
@@ -1135,11 +1135,11 @@ exec 3>&1
 
 errorcode=$?
 if [ $errorcode -eq 1 ]; then
-   dialog --ascii-lines --infobox "Cancel Selected" 5 40 ; sleep 1
+   dialog --shadow --infobox "Cancel Selected" 5 40 ; sleep 1
 	MenuMain
 fi
 if [ $errorcode -eq 255 ]; then
-   dialog --ascii-lines --infobox "ESC Button Pressed" 5 40 ; sleep 1
+   dialog --shadow --infobox "ESC Button Pressed" 5 40 ; sleep 1
 	MenuMain
 fi
 if [ $mode == "RO" ]; then
@@ -1154,7 +1154,7 @@ FileRoot=$(echo "$Logd"  | sed -n '4p' )
 FileRotate=$(echo "$Logd"  | sed -n '5p' )
 
 if [ -z $FilePath ]; then
-   dialog --ascii-lines --infobox "Bad Data - Aborting" 5 40 ; sleep 1
+   dialog --shadow --infobox "Bad Data - Aborting" 5 40 ; sleep 1
   MenuMain
 fi
 
@@ -1192,7 +1192,7 @@ returncode=0
 returncode=$?
 exec 3>&1
 
-Gen=$(dialog  --ascii-lines \
+Gen=$(dialog  --shadow \
 	--backtitle "Hotspot Configurator - by VE3RD" \
 	--separate-widget  $'\n'   \
 	--ok-label "Save" \
@@ -1213,12 +1213,12 @@ returncode=$?
 Callsign=$(echo "$Gen" | sed -n '1p')
 
 if [  $returncode -eq 1 ]; then 
-	dialog --ascii-lines --infobox "Cancel Selected - Function Aborted" 5 40 ; sleep 1
+	dialog --shadow --infobox "Cancel Selected - Function Aborted" 5 40 ; sleep 1
  	MenuMain
 fi
 
 if [ -z "$Callsign" ]; then 
-        dialog --ascii-lines --infobox " No Data Detected - Function Aborted" 5 40 ; sleep 1
+        dialog --shadow --infobox " No Data Detected - Function Aborted" 5 40 ; sleep 1
         MenuMain
 fi
 
@@ -1287,7 +1287,7 @@ mm14=$(sed -nr "/^\[Modem\]/ { :l /^UARTPort[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l
 mm15=$(sed -nr "/^\[Modem\]/ { :l /^UARTSpeed[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" /etc/mmdvmhost)
 exec 3>&1
 
-Modems=$(dialog  --ascii-lines \
+Modems=$(dialog  --shadow \
 	--backtitle "Hotspot Configurator - by VE3RD" \
         --separate-widget  $'\n'   \
         --ok-label "Save" \
@@ -1316,7 +1316,7 @@ Port=$(echo "$Modems" | sed -n '1p')
 
 
 if [  $returncode -eq 1 ]; then 
-	dialog --ascii-lines --infobox "Cancel Selected - Function Aborted" 5 40 ; sleep 1
+	dialog --shadow --infobox "Cancel Selected - Function Aborted" 5 40 ; sleep 1
  	MenuMain
 fi
 if [  $returncode -eq 255 ]; then 
@@ -1409,7 +1409,7 @@ d10=$(sed -nr "/^\[DMR Network\]/ { :l /LocalPort[ ]*=/ { s/.*=[ ]*//; p; q;}; n
 
 exec 3>&1
 
-DMRs=$(dialog  --ascii-lines \
+DMRs=$(dialog  --shadow \
 	--backtitle "Hotspot Configurator - by VE3RD" \
 	--extra-button \
 	--extra-label "Options" \
@@ -1434,7 +1434,7 @@ DMRs=$(dialog  --ascii-lines \
 returncode=$?
 
 if [ $returncode -eq 1 ]; then 
-	dialog --ascii-lines --infobox "Cancel Selected1 - Function Aborted" 5 40 ; sleep 1
+	dialog --shadow --infobox "Cancel Selected1 - Function Aborted" 5 40 ; sleep 1
 	MenuMain
 fi
 
@@ -1496,7 +1496,7 @@ if [ "$NetLocalPort" != "$d10" ]; then
 fi
 
 	
-dialog --ascii-lines --infobox "DMR Data Write Complete " 10 30 ; sleep 1
+dialog --shadow --infobox "DMR Data Write Complete " 10 30 ; sleep 1
 
 mmdvmhost.service restart
 
@@ -1536,7 +1536,7 @@ returncode=$?
 exec 3>&1
 
 
-P25d=$(dialog  --ascii-lines \
+P25d=$(dialog  --shadow \
 	--backtitle "Hotspot Configurator - by VE3RD" \
         --separate-widget  $'\n'   \
         --ok-label "Save" \
@@ -1569,11 +1569,11 @@ P25d=$(dialog  --ascii-lines \
 returncode=$?
 
 if [ $returncode -eq 1 ]; then
-        dialog --ascii-lines --infobox "Cancel Selected - Function Aborted!" 5 60
+        dialog --shadow --infobox "Cancel Selected - Function Aborted!" 5 60
 	MenuMain
 fi
 if [ $returncode -eq 0 ]; then
-        dialog --ascii-lines --infobox "P25 Updating P25 Parameters" 5 60
+        dialog --shadow --infobox "P25 Updating P25 Parameters" 5 60
 fi
 
 Enable1=$(echo "$P25d" | sed -n '2p')
@@ -1665,7 +1665,7 @@ if [ "$NetHangTime" != "$d17" ]; then
 fi
 
 
-dialog --ascii-lines --infobox "P25 Data Write Complete " 10 30 ; sleep 1
+dialog --shadow --infobox "P25 Data Write Complete " 10 30 ; sleep 1
 
 mmdvmhost.service restart ; p25gateway.service restart
 EditP25
@@ -1702,7 +1702,7 @@ returncode=$?
 exec 3>&1
 
 
-nxdnd=$(dialog  --ascii-lines \
+nxdnd=$(dialog  --shadow \
 	--backtitle "Hotspot Configurator - by VE3RD" \
         --separate-widget  $'\n'   \
         --ok-label "Save" \
@@ -1735,11 +1735,11 @@ nxdnd=$(dialog  --ascii-lines \
 returncode=$?
 
 if [ $returncode -eq 1 ]; then
-        dialog --ascii-lines --infobox "Cancel Selected - Function Aborted!" 5 60
+        dialog --shadow --infobox "Cancel Selected - Function Aborted!" 5 60
 	MenuMain
 fi
 if [ $returncode -eq 0 ]; then
-        dialog --ascii-lines --infobox "nxdn Updating nxdn Parameters" 5 60
+        dialog --shadow --infobox "nxdn Updating nxdn Parameters" 5 60
 fi
 
 Enable1=$(echo "$nxdnd" | sed -n '2p')
@@ -1831,7 +1831,7 @@ if [ "$NetHangTime" != "$nd17" ]; then
 fi
 
 
-dialog --ascii-lines --infobox "NXDN Data Write Complete " 5 30 ; sleep 1
+dialog --shadow --infobox "NXDN Data Write Complete " 5 30 ; sleep 1
 
 mmdvmhost.service restart ; nxdngateway.service restart
 
@@ -1884,7 +1884,7 @@ y25=$(sed -nr "/^\[YSF Network\]/ { :l /Hosts[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b 
 
 exec 3>&1
 
-ysfd=$(dialog  --ascii-lines \
+ysfd=$(dialog  --shadow \
 	--backtitle "Hotspot Configurator - by VE3RD" \
         --separate-widget  $'\n' \
         --ok-label "Save" \
@@ -2065,7 +2065,7 @@ fi
 #dialog \
 #        --backtitle "MMDVM Host Configurator - VE3RD" \
 #	--title " Edit Nextion Sections "  \
-#	--ascii-lines --msgbox " This function Under Construction"  13 50
+#	--shadow --msgbox " This function Under Construction"  13 50
 #
 
 mmdvmhost.service restart ; ysfgateway.service restart
@@ -2089,7 +2089,7 @@ MENU="Choose one of the following options:"
 
 
 MAINT=$(dialog --clear \
-                --ascii-lines \
+                --shadow \
                 --cancel-label "RETURN" \
                 --backtitle "$BACKTITLE" \
                 --title "$TITLE" \
@@ -2113,7 +2113,7 @@ if [ "$exitcode" -eq 255 ]; then
 fi
 
 if [ "$exitcode" -eq 1 ]; then
-        dialog --ascii-lines --clear --infobox "Return Selected - Returning to Main Menu" 5 60 ; sleep 1
+        dialog --shadow --clear --infobox "Return Selected - Returning to Main Menu" 5 60 ; sleep 1
 	clear
          MenuMain
 fi
@@ -2134,9 +2134,9 @@ if [ "$MAINT" -eq 1 ]; then
 	errt=[[ $err1+$err2+$err3+$err4+$err5]]
 
 	if [ $errt -gt 0 ]; then
-        	dialog --ascii-lines --infobox "Backups FAILED!!  - Reloading Menu" 5 40 ; sleep 1        	
+        	dialog --shadow --infobox "Backups FAILED!!  - Reloading Menu" 5 40 ; sleep 1        	
 	else
-		dialog --ascii-lines --infobox "Backups Complete - Reloading Menu" 5 40 ; sleep 1
+		dialog --shadow --infobox "Backups Complete - Reloading Menu" 5 40 ; sleep 1
 	fi
 		
 	MenuMaint
@@ -2146,7 +2146,7 @@ fi
 if [ "$MAINT" -eq 2 ]; then
 
      F1=$(dialog \
-        --ascii-lines \
+        --shadow \
         --backtitle "Hotspot Configurator - by VE3RD    -Tab Moves Cursor Between Areas -Tab Selects File" \
         --stdout \
         --title "Please choose a file" \
@@ -2154,11 +2154,11 @@ if [ "$MAINT" -eq 2 ]; then
 
 	exitcode=$?
 	if [ $exitcode -eq 1 ]; then
-		dialog --ascii-lines --infobox "Cancel Selected\nFunction Aborted" 5 40 ; sleep 1
+		dialog --shadow --infobox "Cancel Selected\nFunction Aborted" 5 40 ; sleep 1
 		MenuMaint
 	fi
 	if [ $exitcode -eq 255 ]; then
-		dialog --ascii-lines --infobox "ESC Button Detected\nFunction Aborted" 5 40 ; sleep 1
+		dialog --shadow --infobox "ESC Button Detected\nFunction Aborted" 5 40 ; sleep 1
 		MenuMaint
 	fi
 
@@ -2170,13 +2170,13 @@ if [ "$MAINT" -eq 2 ]; then
 	  	cp $F1 $dest
 		err=$?
 		if [ $err -eq 0 ]; then
-			dialog --ascii-lines --infobox "Backup Config File $F1\nRestored to $dest" 5 60 ; sleep 5
+			dialog --shadow --infobox "Backup Config File $F1\nRestored to $dest" 5 60 ; sleep 5
 		else
-			dialog --ascii-lines --infobox "Restore Operation Failed" 5 40 ; sleep 1
+			dialog --shadow --infobox "Restore Operation Failed" 5 40 ; sleep 1
 		
 		fi
 	else
-		dialog --ascii-lines --infobox "ERR - No File\nFunction Aborted" 5 40 ; sleep 1
+		dialog --shadow --infobox "ERR - No File\nFunction Aborted" 5 40 ; sleep 1
         fi
 fi
 
@@ -2268,7 +2268,7 @@ nd17=$(sed -nr "/^\[NextionDriver\]/ { :l /SleepWhenInactive[ ]*=/ { s/.*=[ ]*//
 
 exec 3>&1
 
-Next=$(dialog  --ascii-lines \
+Next=$(dialog  --shadow \
 	--backtitle "Hotspot Configurator - by VE3RD" \
         --separate-widget  $'\n'   \
         --ok-label "Save" \
@@ -2308,7 +2308,7 @@ returncode=$?
 exec 3>&-
 
 if [ $returncode -eq 1 ]; then
-        dialog --ascii-lines --infobox "No Data - Function Aborted" 5 30 ; sleep 1
+        dialog --shadow --infobox "No Data - Function Aborted" 5 30 ; sleep 1
    MenuMain
 fi
 
@@ -2428,7 +2428,7 @@ if [ "$SleepWhenInactive" != "$nd17" ]; then
         sudo sed -i '/^\[/h;G;/NextionDriver]/s/\(SleepWhenInactive=\).*/\1'"$SleepWhenInactive"'/m;P;d' /etc/mmdvmhost
 fi
         
-dialog --ascii-lines --infobox "Nextion Data Write Complete " 10 30 
+dialog --shadow --infobox "Nextion Data Write Complete " 10 30 
 
 mmdvmhost.service restart
 
@@ -2474,7 +2474,7 @@ exec 3>&1
         --title "Display Screen Sections - Non - Nextion " \
         --ok-label "Submit" \
 	--backtitle "Hotspot Configurator - by VE3RD" \
-        --ascii-lines \
+        --shadow \
         --mixedform "Display Screens - Currently Read Only" 0 70 0 \
         "TFT Serial"    	1 1 "TFT Serial"  	1 22 35 0 2 \
         "Port"    		2 3 "$tPort"  		2 22 35 0 0 \
@@ -2516,7 +2516,7 @@ fi
 dialog \
 	--backtitle "Hotspot Configurator - by VE3RD" \
 	--title " Edit Non Nextion Screens "  \
-	--ascii-lines --msgbox " This function Under Construction" 13 50
+	--shadow --msgbox " This function Under Construction" 13 50
 
 result=$?
 EditScreens
@@ -2534,7 +2534,7 @@ URLs=$(sed -nr "/^\[Info\]/ { :l /URL[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" /et
 
 exec 3>&1
 
-Infod=$(dialog  --ascii-lines \
+Infod=$(dialog  --shadow \
 	--backtitle "Hotspot Configurator - by VE3RD" \
         --separate-widget  $'\n'   \
         --ok-label "Save" \
@@ -2553,7 +2553,7 @@ returncode=$?
 
 
 if [ $returncode -eq 1 ]; then
-        dialog --ascii-lines --infobox "No Data - Function Aborted" 5 30 ; sleep 1
+        dialog --shadow --infobox "No Data - Function Aborted" 5 30 ; sleep 1
         MenuMain
 fi
 
@@ -2620,7 +2620,7 @@ MENU="Choose one of the following options\n RO Means nothing written to File"
 
 CHOICE=$(dialog --clear \
 		--stdout \
-		--ascii-lines \
+		--shadow \
                 --cancel-label "EXIT" \
                 --backtitle "$BACKTITLE" \
                 --title "$TITLE" \
@@ -2654,14 +2654,14 @@ if [ $exitcode -eq 255 ]; then
 fi
 
 if [ $exitcode -eq 1 ]; then
-        dialog --ascii-lines --clear --infobox "Exit Selected - Exiting Script" 5 40 ; sleep 1
+        dialog --shadow --clear --infobox "Exit Selected - Exiting Script" 5 40 ; sleep 1
          exit
    
 fi
 
 
 if [ -z "$CHOICE" ]; then
-        dialog --ascii-lines --clear --infobox "Choice Box Empty - Exiting Script" 5 40 ; sleep 1
+        dialog --shadow --clear --infobox "Choice Box Empty - Exiting Script" 5 40 ; sleep 1
  	exit
 fi
 
@@ -2696,7 +2696,7 @@ esac
 function searchNetHost(){
 
 declare -a SearchTxt=( $(dialog --title " P25 Server Search Utility" \
-        --ascii-lines \
+        --shadow \
         --clear \
         --colors \
 	--backtitle "Hotspot Configurator - by VE3RD" \
